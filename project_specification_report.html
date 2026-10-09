@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Pillar Management - Project Specification Report</title>
+    <style>
+        :root {
+            --primary: #1E3A8A; /* Dark Blue */
+            --secondary: #3B82F6;
+            --surface: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--surface);
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: var(--primary);
+            margin-top: 40px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+        p, li {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .tag {
+            background-color: #DBEAFE;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #F1F5F9;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .feature-box {
+            background-color: #F8FAFC;
+            border-left: 4px solid var(--secondary);
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Blue Pillar Management<br><span style="font-size: 20px; font-weight: normal; color: var(--text-muted)">Project Specification Report</span></h1>
+
+    <h2>1. Technology Stack</h2>
+    <p>The platform is built on a modern, high-performance web architecture optimized for SEO, speed, and maintainability.</p>
+    
+    <h3>Frontend & UI Layer</h3>
+    <div class="tags">
+        <span class="tag">Next.js 14 (App Router)</span>
+        <span class="tag">React 18</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">Radix UI</span>
+        <span class="tag">Framer Motion</span>
+        <span class="tag">Zustand</span>
+        <span class="tag">React Hook Form + Zod</span>
+    </div>
+
+    <h3>Backend, Database & External Integrations</h3>
+    <div class="tags">
+        <span class="tag">Supabase (PostgreSQL)</span>
+        <span class="tag">Supabase Auth (SSR Cookies)</span>
+        <span class="tag">Resend (Email API)</span>
+        <span class="tag">Buildium Open API</span>
+        <span class="tag">Vercel Analytics</span>
+    </div>
+
+    <h2>2. Security Architecture</h2>
+    <p>Blue Pillar incorporates enterprise-grade security logic to cater to sensitive administrative actions and guard against malicious web activities.</p>
+    <ul>
+        <li><strong>Row Level Security (RLS):</strong> Direct database access controls ensuring that Public users can only read authorized property listings, while complete Write/Delete pipelines are rigorously gated to Authenticated Admin UUIDs.</li>
+        <li><strong>Server Action Rate Limiting:</strong> Implements active rate-limit logic protecting contact form endpoints from DDOS attacks and unauthorized spam looping.</li>
+        <li><strong>Payload Sanitization:</strong> Employs strict server-side schema parsing using Zod before any input reaches the database layers.</li>
+        <li><strong>Defensive Auth Strategies:</strong> HTTP-Only Secure cookies prevent access token theft through XSS injections.</li>
+    </ul>
+
+    <h2>3. Database Schema & Migrations</h2>
+    <p>The database maintains strict relational integrity inside PostgreSQL via Supabase. Below defines the core table schemas and their responsibilities:</p>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Core Responsibility</th>
+                    <th>Key Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>profiles</code></td>
+                    <td>Identity Management</td>
+                    <td>Tied to `auth.users`. Grants 'admin' roles to specific emails.</td>
+                </tr>
+                <tr>
+                    <td><code>properties</code></td>
+                    <td>Listing Catalog</td>
+                    <td>Holds titles, pricing, spatial data, `property_status`, and analytical triggers (views/clicks). Uses `buildium_id` mapping.</td>
+                </tr>
+                <tr>
+                    <td><code>property_images</code></td>
+                    <td>Media Handling</td>
+                    <td>One-To-Many relationship to properties storing persistent asset bucket URLs.</td>
+                </tr>
+                <tr>
+                    <td><code>leads</code></td>
+                    <td>Inquiry Routing</td>
+                    <td>Routes messages systematically into categorizes: Owner, Tenant, Maintenance, Renovation.</td>
+                </tr>
+                <tr>
+                    <td><code>maintenance_orders</code></td>
+                    <td>Operations</td>
+                    <td>Tracks ongoing tickets spanning from Pending to Completed against properties.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>4. Advanced Software Features & Capabilities</h2>
+    <p>The system expands far beyond a simple landing page into an end-to-end management toolkit.</p>
+
+    <div class="feature-box">
+        <strong>Intelligent Property Syncing (Buildium Integration)</strong>
+        <p>A server-orchestrated CRON system directly queries Buildium's Open API. It natively ingests new properties, syncs rented/unlisted property lifecycles, and resolves dual-entry friction by treating Buildium as the singular Source-of-Truth.</p>
+    </div>
+
+    <div class="feature-box">
+        <strong>SEO & Performance-Optimized Public Funnel</strong>
+        <p>Rental browsers experience a lightning-fast catalog with dynamic client-side pagination, strict sorting (Newest/Price/Popular), and dynamic route rendering. RPC DB increments discreetly record market interest per-listed asset.</p>
+    </div>
+
+    <div class="feature-box">
+        <strong>Command Center Dashboard</strong>
+        <p>Authenticated users have exclusive access to secure internal routing featuring multi-dimensional stat tracing via Recharts, consolidated lead management, and quick-action toolsets.</p>
+    </div>
+
+    <div class="feature-box">
+        <strong>Streamlined Lead Intake System</strong>
+        <p>User inputs are intercepted, validated, committed to the cloud database, and synchronously fired into Resend via highly styled HTML templates to immediately notify management of prospective tenants or owners.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
