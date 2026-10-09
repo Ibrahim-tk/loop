@@ -44,8 +44,8 @@ export const metadata: Metadata = {
         'maintenance',
     ],
     icons: {
-        icon: '/favicon.svg',
-        apple: '/favicon.svg',
+        icon: '/favicon.png',
+        apple: '/apple-touch-icon.png',
     },
     openGraph: {
         title: 'Fasana Homes',

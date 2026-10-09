@@ -56,7 +56,11 @@ export function createPublicClient() {
                 persistSession: false,
                 autoRefreshToken: false,
                 detectSessionInUrl: false
-            }
+            },
+            // Never let Next's data cache serve stale listings after an admin edit
+            global: {
+                fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }),
+            },
         }
     );
 }

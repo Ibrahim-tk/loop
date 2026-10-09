@@ -8,7 +8,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1600&q=80',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-11.jpg',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -16,7 +16,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1600&q=80',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-27.jpg',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -24,7 +24,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-17.jpg',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -32,7 +32,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80',0),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',1),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-22.jpg',0),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',1),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -40,7 +40,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80',0),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',1),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-24.jpg',0),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',1),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -48,7 +48,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80',0),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',1),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-15.jpg',0),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',1),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -56,7 +56,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&q=80',0),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',1),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-28.jpg',0),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',1),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -64,7 +64,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80',0),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-14.jpg',0),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -72,7 +72,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1600&q=80',0),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',1),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-18.jpg',0),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',1),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -80,7 +80,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1600&q=80',0),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-36.jpg',0),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -88,7 +88,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1600&q=80',0),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',1),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-25.jpg',0),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',1),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -96,7 +96,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=1600&q=80',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-16.jpg',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -104,7 +104,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1600&q=80',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-21.jpg',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -112,7 +112,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=1600&q=80',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-35.jpg',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -120,7 +120,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1430285561322-7808604715df?w=1600&q=80',0),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',1),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-33.jpg',0),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',1),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -128,7 +128,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600&q=80',0),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',1),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-19.jpg',0),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',1),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -136,7 +136,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80',0),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',1),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-23.jpg',0),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',1),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -144,7 +144,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1600&q=80',0),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',1),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-13.jpg',0),('/properties/house-12.jpg',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',3)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -152,7 +152,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1494526585095-c41746248156?w=1600&q=80',0),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-34.jpg',0),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -160,7 +160,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=1600&q=80',0),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',1),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-29.jpg',0),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',1),('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -168,7 +168,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1600&q=80',0),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-26.jpg',0),('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1600&q=80',1),('https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -176,7 +176,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1600&q=80',0),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',1),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-20.jpg',0),('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80',1),('https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -184,7 +184,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=1600&q=80',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-31.jpg',0),('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80',1),('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -192,7 +192,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1600&q=80',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-30.jpg',0),('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80',1),('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80',2)) AS v(url, ord);
 
 WITH p AS (
   INSERT INTO properties (title,address,city,zip,rent_price,bedrooms,bathrooms,sqft,garage,year_built,status,featured,property_type,listing_type,furnishing,amenities,features,highlights,description,agent_name,agent_phone,agent_email,agent_photo_url,source,created_at)
@@ -200,7 +200,7 @@ WITH p AS (
   RETURNING id
 )
 INSERT INTO property_images (property_id, storage_url, display_order)
-SELECT id, url, ord FROM p, (VALUES ('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
+SELECT id, url, ord FROM p, (VALUES ('/properties/house-32.jpg',0),('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80',1),('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=80',2)) AS v(url, ord);
 
 -- A few sample inquiries so the dashboard isn't empty
 INSERT INTO leads (name,email,phone,type,message,property_id)

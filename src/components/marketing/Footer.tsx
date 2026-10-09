@@ -97,7 +97,6 @@ export default function Footer() {
                                     {[
                                         ['Home', 'About'],
                                         ['Rentals', 'Contact'],
-                                        ['Services'],
                                     ].map((row, rowIdx) => (
                                         row.map((label) => (
                                             <Link

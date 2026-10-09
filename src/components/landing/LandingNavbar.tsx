@@ -9,7 +9,6 @@ import { useSavedHydrated, useSavedProperties } from '@/stores/savedProperties';
 const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/rentals', label: 'Properties' },
-    { href: '/services', label: 'Services' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
 ];
@@ -90,65 +89,59 @@ export default function LandingNavbar({ variant = 'landing', showBanner = true }
                     : 'bg-transparent border-b border-transparent'
                     }`}
             >
-                <div className="flex items-center justify-between px-5 sm:px-8 lg:px-16 py-2">
-                    <div className="flex items-center gap-8">
-                        <Link href="/" className="relative shrink-0 flex items-center h-[32px] sm:h-[40px] lg:h-[40px]" onClick={() => setIsOpen(false)}>
-                            <img
-                                src="/brand/logo-light.png"
-                                alt="Fasana Homes"
-                                className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-                            />
-                            <img
-                                src="/brand/logo-dark.png"
-                                alt="Fasana Homes"
-                                className={`h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                            />
-                        </Link>
+                <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] gap-6 xl:gap-8 px-5 sm:px-8 lg:px-16 py-2">
+                    <Link href="/" className="relative shrink-0 flex items-center justify-self-start h-[32px] w-[198px] sm:h-[40px] sm:w-[247px] lg:h-[32px] lg:w-[198px] xl:h-[40px] xl:w-[247px]" onClick={() => setIsOpen(false)}>
+                        <img
+                            src="/brand/logo-light.png"
+                            alt="Fasana Homes"
+                            className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                        />
+                        <img
+                            src="/brand/logo-dark.png"
+                            alt="Fasana Homes"
+                            className={`h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                        />
+                    </Link>
 
-                        <div className="hidden lg:flex items-center gap-8">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className={`text-[length:var(--typeface-paragraph-text)] leading-6 transition-colors duration-300 ${isSolid
-                                        ? 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                                        : 'text-white hover:text-white/80'
-                                        }`}
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="hidden lg:flex items-center gap-4">
+                    <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`text-[length:var(--typeface-paragraph-text)] leading-6 transition-colors duration-300 ${isSolid
+                                    ? 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                                    : 'text-white hover:text-white/80'
+                                    }`}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                         {shortcuts.map(({ href, label, Icon, count }) => (
                             <Link
                                 key={href}
                                 href={href}
                                 aria-label={count ? `${label} (${count})` : label}
-                                className={`relative flex items-center gap-2 h-[50px] px-4 rounded-[6px] border text-[length:var(--typeface-paragraph-text-s)] font-medium whitespace-nowrap transition-all duration-300 ${isSolid
-                                    ? 'text-[var(--text-primary)] border-[var(--outline-default)] hover:border-[var(--action-border-hover)]'
-                                    : 'text-white border-white/60 hover:bg-white hover:text-[var(--text-primary)]'
+                                title={label}
+                                className={`flex items-center gap-1.5 text-[length:var(--typeface-paragraph-text)] leading-6 transition-colors duration-300 ${isSolid
+                                    ? 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                                    : 'text-white hover:text-white/80'
                                     }`}
                             >
                                 <Icon size={18} />
-                                {label}
+                                <span className="hidden xl:inline">{label}</span>
                                 {count > 0 && (
                                     <span className="min-w-5 h-5 px-1.5 rounded-full bg-[var(--color-green-500)] text-[11px] leading-5 text-center text-white">{count}</span>
                                 )}
                             </Link>
                         ))}
-                        <Link
-                            href="/contact"
-                            className={`flex items-center justify-center px-[22.5px] py-[15px] rounded-[6px] text-[length:var(--typeface-paragraph-text-s)] font-medium text-white leading-normal min-w-[80px] whitespace-nowrap transition-colors duration-300 ${isSolid
-                                ? 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)]'
-                                : 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)]'
-                                }`}
-                        >
-                            Contact an agent
-                        </Link>
                     </div>
+
+                    <Link
+                        href="/contact"
+                        className="hidden lg:flex justify-self-end items-center justify-center px-[22.5px] py-[15px] rounded-[6px] text-[length:var(--typeface-paragraph-text-s)] font-medium text-white leading-normal whitespace-nowrap bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition-colors duration-300"
+                    >
+                        Contact an agent
+                    </Link>
 
                     <button
                         className={`lg:hidden p-2 rounded-lg transition-colors duration-300 z-50 relative ${isSolid
