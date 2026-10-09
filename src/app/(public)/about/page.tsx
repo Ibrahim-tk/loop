@@ -7,7 +7,7 @@ import AnimatedBlock from '@/components/ui/AnimatedBlock';
 
 export const metadata: Metadata = {
     title: 'About Us',
-    description: 'Learn about Blue Pillar Management, our philosophy, and our commitment to protecting your property investments.',
+    description: 'Learn about Fasana Homes, our philosophy, and our commitment to protecting your property investments.',
 };
 
 export default function AboutPage() {
@@ -25,7 +25,7 @@ export default function AboutPage() {
                                 className="font-normal leading-[1.1] tracking-[-0.5px] text-[color:var(--on-surface-default)]"
                                 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}
                             >
-                                Blue Pillar<br className="hidden sm:block" /> Management
+                                Fasana<br className="hidden sm:block" /> Homes
                             </h1>
                         </AnimatedBlock>
 
@@ -111,10 +111,10 @@ export default function AboutPage() {
                             </h2>
                             <div className="text-[length:var(--typeface-heading-subheading)] text-[color:var(--on-surface-default)] font-light leading-relaxed lg:leading-[28px] flex flex-col gap-5 lg:gap-7">
                                 <p>
-                                    The owners of Blue Pillar Management began investing in real estate more than 20 years ago and have a combined 35 years of hands-on experience managing their own properties. Their mission has always been to provide exceptional service to their tenants and create homes where residents feel comfortable staying long term.
+                                    The owners of Fasana Homes began investing in real estate more than 20 years ago and have a combined 35 years of hands-on experience managing their own properties. Their mission has always been to provide exceptional service to their tenants and create homes where residents feel comfortable staying long term.
                                 </p>
                                 <p>
-                                    Because of their prompt responses, attention to detail, and commitment to tenant care, their properties have an average tenant stay of approximately five years. Over time, friends and family began requesting their help with managing their own properties, which ultimately led to the formation of Blue Pillar Management in February 2026.
+                                    Because of their prompt responses, attention to detail, and commitment to tenant care, their properties have an average tenant stay of approximately five years. Over time, friends and family began requesting their help with managing their own properties, which ultimately led to the formation of Fasana Homes in February 2026.
                                 </p>
                             </div>
                         </div>
@@ -162,7 +162,7 @@ export default function AboutPage() {
                                 },
                                 {
                                     title: "Community Roots",
-                                    description: "What started as helping friends and family manage their properties grew into the official launch of Blue Pillar Management.",
+                                    description: "What started as helping friends and family manage their properties grew into the official launch of Fasana Homes.",
                                     image: "/about-us-page/roots.webp"
                                 },
                                 {

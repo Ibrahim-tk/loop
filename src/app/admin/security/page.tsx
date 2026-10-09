@@ -1,7 +1,7 @@
 import SecuritySettings from '@/components/admin/SecuritySettings';
 
 export const metadata = {
-    title: 'Security Settings | Blue Pillar Management',
+    title: 'Security Settings | Fasana Homes',
 };
 
 export default function SecurityPage() {

@@ -54,9 +54,9 @@ export default function Footer() {
                         {/* Logo */}
                         <Link href="/" className="shrink-0">
                             <img
-                                src="/landing-page/logo-dark.svg"
-                                alt="Blue Pillar Management"
-                                className="h-[48px] sm:h-[56px] lg:h-[56px] w-auto object-contain"
+                                src="/brand/logo-dark.png"
+                                alt="Fasana Homes"
+                                className="h-[32px] sm:h-[40px] lg:h-[40px] w-auto object-contain"
                             />
                         </Link>
 
@@ -66,7 +66,7 @@ export default function Footer() {
                             {/* Left Sub: Description + Certification Logos */}
                             <div className="flex flex-col gap-6 w-full lg:w-[554px] shrink-0">
                                 <p className="font-light text-[length:var(--typeface-paragraph-text)] leading-6 text-[color:var(--on-surface-variant)] max-w-[388px]">
-                                    Blue Pillar is your single point of contact for expert leasing, maintenance, and strategic renovations across Arizona and California.
+                                    Fasana Homes is your single point of contact for expert leasing, maintenance, and strategic renovations across Punjab and the rest of Pakistan.
                                 </p>
                                 {/* Certification Images */}
                                 <div className="flex gap-3 items-center">
@@ -121,17 +121,17 @@ export default function Footer() {
                                     </p>
                                     <div className="flex flex-col gap-1">
                                         <p className="font-light text-[length:var(--typeface-paragraph-text)] leading-6 text-[color:var(--on-surface-variant)]">
-                                            Serving Arizona &amp; California
+                                            Based in Punjab, serving all of Pakistan
                                         </p>
                                         <a
-                                            href="mailto:admin@bluepillarmanagement.com"
+                                            href="mailto:admin@fasanahomes.com"
                                             className="font-light text-[length:var(--typeface-paragraph-text)] text-[color:var(--on-surface-variant)] hover:text-[color:var(--on-surface-default)] transition-colors inline-flex items-center gap-2 w-fit group"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256" className="shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                                                 <path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a16,16,0,0,0,21.82,0L216,74.19V192Z" />
                                             </svg>
                                             <span className="underline decoration-solid underline-offset-4 group-hover:decoration-[color:var(--on-surface-default)] decoration-[color:var(--on-surface-variant)] transition-all">
-                                                admin@bluepillarmanagement.com
+                                                admin@fasanahomes.com
                                             </span>
                                         </a>
                                     </div>
@@ -150,7 +150,7 @@ export default function Footer() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 opacity-60">
                         {/* Copyright */}
                         <p className="font-light text-[length:var(--typeface-paragraph-text-s)] leading-6 text-[color:var(--on-surface-variant)]">
-                            &copy; 2026 Blue Pillar Management. All Rights Reserved.
+                            &copy; 2026 Fasana Homes. All Rights Reserved.
                         </p>
 
                         {/* Privacy & Terms */}

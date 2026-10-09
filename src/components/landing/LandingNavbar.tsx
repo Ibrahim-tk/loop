@@ -92,15 +92,15 @@ export default function LandingNavbar({ variant = 'landing', showBanner = true }
             >
                 <div className="flex items-center justify-between px-5 sm:px-8 lg:px-16 py-2">
                     <div className="flex items-center gap-8">
-                        <Link href="/" className="relative shrink-0 flex items-center h-[48px] sm:h-[56px] lg:h-[56px]" onClick={() => setIsOpen(false)}>
+                        <Link href="/" className="relative shrink-0 flex items-center h-[32px] sm:h-[40px] lg:h-[40px]" onClick={() => setIsOpen(false)}>
                             <img
-                                src="/landing-page/logo.svg"
-                                alt="Blue Pillar Management"
+                                src="/brand/logo-light.png"
+                                alt="Fasana Homes"
                                 className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                             />
                             <img
-                                src="/landing-page/logo-dark.svg"
-                                alt="Blue Pillar Management"
+                                src="/brand/logo-dark.png"
+                                alt="Fasana Homes"
                                 className={`h-full w-auto object-contain transition-opacity duration-300 ${isSolid ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                             />
                         </Link>

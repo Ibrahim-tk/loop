@@ -7,7 +7,7 @@ import AnimatedBlock from '@/components/ui/AnimatedBlock';
 
 export const metadata: Metadata = {
     title: 'Services',
-    description: 'Comprehensive property management and renovation services by Blue Pillar Management.',
+    description: 'Comprehensive property management and renovation services by Fasana Homes.',
 };
 
 const services = [
@@ -250,7 +250,7 @@ export default function ServicesPage() {
                                 },
                                 {
                                     title: "Community Roots",
-                                    description: "What started as helping friends and family manage their properties grew into the official launch of Blue Pillar Management.",
+                                    description: "What started as helping friends and family manage their properties grew into the official launch of Fasana Homes.",
                                     image: "/about-us-page/roots.webp"
                                 },
                                 {

@@ -1,5 +1,5 @@
 // ============================================
-// Blue Pillar Management — TypeScript Types
+// Fasana Homes — TypeScript Types
 // ============================================
 
 export type PropertyStatus = 'AVAILABLE' | 'PENDING' | 'RENTED' | 'SOLD' | 'SHOWCASE' | 'RENOVATION' | 'UNDER_MANAGEMENT' | 'UNLISTED';

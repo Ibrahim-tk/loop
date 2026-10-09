@@ -78,9 +78,9 @@ export default function LoginPage() {
                 <div className="text-center mb-10">
                     <Link href="/" className="inline-block mb-6">
                         <img
-                            src="/landing-page/logo-dark.svg"
-                            alt="Blue Pillar Management"
-                            className="h-[48px] sm:h-[56px] w-auto object-contain mx-auto"
+                            src="/brand/logo-dark.png"
+                            alt="Fasana Homes"
+                            className="h-[36px] sm:h-[40px] w-auto object-contain mx-auto"
                         />
                     </Link>
                     <h1 className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)]">
@@ -105,7 +105,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-4 py-3 rounded-[6px] border border-[var(--outline-default)] bg-white text-[length:var(--typeface-paragraph-text)] text-[color:var(--on-surface-default)] placeholder:text-[color:var(--on-surface-variant)] placeholder:opacity-50 focus:outline-none focus:border-[var(--on-surface-primary)] focus:ring-1 focus:ring-[var(--on-surface-primary)] transition-colors"
-                                placeholder="admin@bluepillarmanagement.com"
+                                placeholder="admin@fasanahomes.com"
                             />
                         </div>
 
@@ -146,7 +146,7 @@ export default function LoginPage() {
 
                 {/* Footer */}
                 <p className="text-center text-[length:var(--typeface-paragraph-text-s)] font-light text-[color:var(--on-surface-variant)] mt-8 opacity-60">
-                    &copy; {new Date().getFullYear()} Blue Pillar Management
+                    &copy; {new Date().getFullYear()} Fasana Homes
                 </p>
             </div>
         </div>

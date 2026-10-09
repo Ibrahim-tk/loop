@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${property.title} | ${property.city}`,
         description:
             property.description ||
-            `${property.title} in ${property.city} — $${property.rent_price?.toLocaleString()}${property.listing_type === 'RENT' ? '/month' : ''}. Professionally managed by Blue Pillar Management.`,
+            `${property.title} in ${property.city} — $${property.rent_price?.toLocaleString()}${property.listing_type === 'RENT' ? '/month' : ''}. Professionally managed by Fasana Homes.`,
     };
 }
 

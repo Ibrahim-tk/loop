@@ -29,17 +29,17 @@ const pragatiNarrow = Pragati_Narrow({
 
 export const metadata: Metadata = {
     title: {
-        default: 'Blue Pillar Management | Property Management & Renovations',
-        template: '%s | Blue Pillar Management',
+        default: 'Fasana Homes | Property Management & Renovations',
+        template: '%s | Fasana Homes',
     },
     description:
-        'Blue Pillar Management provides expert property management and renovation services. Maximize your ROI with our comprehensive management solutions.',
+        'Fasana Homes provides expert property management and renovation services. Maximize your ROI with our comprehensive management solutions.',
     keywords: [
         'property management',
         'renovations',
         'rental properties',
         'real estate',
-        'Blue Pillar',
+        'Fasana Homes',
         'tenant screening',
         'maintenance',
     ],
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
         apple: '/favicon.svg',
     },
     openGraph: {
-        title: 'Blue Pillar Management',
+        title: 'Fasana Homes',
         description: 'Property Management & Renovation Experts',
         url: process.env.NEXT_PUBLIC_SITE_URL,
-        siteName: 'Blue Pillar Management',
+        siteName: 'Fasana Homes',
         type: 'website',
     },
 };

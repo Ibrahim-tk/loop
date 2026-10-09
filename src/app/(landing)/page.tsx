@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Homes for Rent & Sale',
     description:
-        'Search homes for rent and sale, save your favourites and book a viewing with Blue Pillar Management.',
+        'Search homes for rent and sale, save your favourites and book a viewing with Fasana Homes.',
 };
 
 // Revalidate landing page periodically for fresh properties

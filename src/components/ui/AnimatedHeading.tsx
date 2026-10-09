@@ -200,7 +200,7 @@ export default function AboutSection() {
   return (
     <section className="py-20 space-y-6">
       <AnimatedHeading as="h1" className="text-4xl font-bold">
-        About Blue Pillar
+        About Fasana Homes
       </AnimatedHeading>
       
       <AnimatedHeading as="p" className="text-lg text-gray-700 max-w-2xl" delay={0.4} duration={0.6}>

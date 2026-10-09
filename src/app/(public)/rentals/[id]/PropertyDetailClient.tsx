@@ -421,7 +421,7 @@ export default function PropertyDetailClient({
                     onNavigate={navigateImage}
                     onSetIndex={setCurrentImage}
                     propertyTitle={property.title}
-                    propertyCity={`${property.city}, ${property.zip?.substring(0, 2) || 'AZ'}`}
+                    propertyCity={property.city}
                     propertyStatus={property.status}
                 />
             )}
@@ -858,7 +858,7 @@ export default function PropertyDetailClient({
                                     Similar properties
                                 </h2>
                                 <p className="text-[length:var(--typeface-heading-subheading)] font-light text-[color:var(--on-surface-default)] leading-7">
-                                    Explore our curated list of high-quality homes in Arizona and California. All properties are professionally managed and ready for immediate move-in.
+                                    Explore our curated list of high-quality homes across Punjab and Pakistan. All properties are professionally managed and ready for immediate move-in.
                                 </p>
                             </div>
                             {/* Right: View All + Arrows */}

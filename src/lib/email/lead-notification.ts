@@ -10,7 +10,7 @@ interface LeadNotificationData {
     createdAt?: string;
 }
 
-const LOGO_URL = 'https://bluepillarmanagement.com/logo.svg';
+const LOGO_URL = 'https://fasanahomes.com/brand/logo-dark.png';
 
 export function buildLeadNotificationHtml(data: LeadNotificationData): string {
     const option = getInquiryOption(data.helpType);
@@ -41,14 +41,14 @@ export function buildLeadNotificationHtml(data: LeadNotificationData): string {
               hour12: true,
           });
 
-    const dashboardUrl = 'https://www.bluepillarmanagement.com/admin/leads';
+    const dashboardUrl = 'https://fasanahomes.com/admin/leads';
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Inquiry - Blue Pillar Management</title>
+<title>New Inquiry - Fasana Homes</title>
 </head>
 <body style="margin:0;padding:0;background-color:#f4f5f7;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f5f7;">
@@ -197,7 +197,7 @@ export function buildLeadNotificationHtml(data: LeadNotificationData): string {
 <tr>
 <td style="background-color:#f8f9fa;padding:20px 32px;text-align:center;border-top:1px solid #e8e9eb;">
   <p style="margin:0 0 4px 0;font-size:13px;color:#8b8f94;font-weight:600;">
-    Blue Pillar Management
+    Fasana Homes
   </p>
   <p style="margin:0;font-size:11px;color:#b0b3b8;">
     This is an automated notification from your website contact form.

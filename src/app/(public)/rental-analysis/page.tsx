@@ -100,7 +100,7 @@ export default function RentalAnalysisPage() {
                         <AnimatedBlock delay={0.4} className="relative border-l-4 border-white pl-5 max-w-[512px]">
                             <div className="opacity-90">
                                 <p className="text-white text-[length:var(--typeface-heading-h5,18px)] font-normal leading-normal">
-                                    &ldquo;Blue Pillar&apos;s analysis was spot on. I increased my rental
+                                    &ldquo;Fasana Homes&apos;s analysis was spot on. I increased my rental
                                     income by 15% within the first month.&rdquo;
                                 </p>
                             </div>

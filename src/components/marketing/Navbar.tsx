@@ -38,18 +38,18 @@ export default function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-[9px] group">
                         <Image
-                            src="/logo.svg"
-                            alt="Blue Pillar"
+                            src="/brand/logo-icon.png"
+                            alt="Fasana Homes"
                             width={42}
                             height={50}
-                            className="shrink-0"
+                            className="shrink-0 object-contain"
                         />
                         <div className="flex flex-col">
                             <span className="text-[16px] font-bold tracking-tight text-white leading-tight">
-                                BLUE PILLAR
+                                FASANA
                             </span>
                             <span className="text-[14px] font-light text-white/80 leading-tight">
-                                MANAGEMENT
+                                HOMES
                             </span>
                         </div>
                     </Link>

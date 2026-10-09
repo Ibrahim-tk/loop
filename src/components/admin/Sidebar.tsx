@@ -62,15 +62,15 @@ export function Sidebar({ leadsBadge = 0, viewingsBadge = 0 }: SidebarProps) {
                 <div className="flex items-center gap-3 px-6 py-5">
                     <Link href="/" className="flex items-center gap-3 flex-1 group">
                         <Image
-                            src="/logo-dark.svg"
-                            alt="Blue Pillar"
+                            src="/brand/logo-icon.png"
+                            alt="Fasana Homes"
                             width={32}
                             height={32}
-                            className="rounded-lg group-hover:scale-105 transition-transform"
+                            className="object-contain group-hover:scale-105 transition-transform"
                         />
                         <div>
-                            <h2 className="text-sm font-semibold">BLUE PILLAR</h2>
-                            <p className="text-xs text-muted-foreground">MANAGEMENT</p>
+                            <h2 className="text-sm font-semibold">FASANA</h2>
+                            <p className="text-xs text-muted-foreground">HOMES</p>
                         </div>
                     </Link>
                     <Button
