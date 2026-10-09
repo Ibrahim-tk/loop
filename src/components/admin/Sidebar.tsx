@@ -8,7 +8,6 @@ import {
     Building,
     MessageSquare,
     CalendarClock,
-    Plug,
     Settings,
     ChevronLeft,
     Menu,
@@ -31,7 +30,6 @@ const navItems = [
     { label: 'Properties', href: '/admin/properties', icon: Building },
     { label: 'Viewings', href: '/admin/viewings', icon: CalendarClock, badgeKey: 'viewings' as const },
     { label: 'Inquiries', href: '/admin/leads', icon: MessageSquare, badgeKey: 'leads' as const },
-    { label: 'Integrations', href: '/admin/integrations', icon: Plug },
 ];
 
 export function Sidebar({ leadsBadge = 0, viewingsBadge = 0 }: SidebarProps) {

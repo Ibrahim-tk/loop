@@ -6,7 +6,7 @@ const securityHeaders = [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.buildium.com https://*.managebuilding.com https://*.amazonaws.com",
+            "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.amazonaws.com",
             "font-src 'self' data:",
             "connect-src 'self' https://*.supabase.co",
             "frame-ancestors 'none'",
@@ -37,6 +37,8 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+    // Lets a production build run alongside the dev server (NEXT_DIST_DIR=.next-build)
+    distDir: process.env.NEXT_DIST_DIR || '.next',
     async headers() {
         return [
             {

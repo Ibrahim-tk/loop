@@ -41,8 +41,7 @@ export interface Property {
     created_at: string;
     updated_at: string;
     property_images?: PropertyImage[];
-    buildium_id?: string;
-    source?: 'buildium' | 'manual' | 'demo';
+    source?: 'manual' | 'demo';
     property_type: PropertyType;
     listing_type: ListingType;
     furnishing: Furnishing;
