@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const MIN_MS = 1200; // never flash by too fast
-const MAX_MS = 9000; // never block the page on a slow network
+const MAX_MS = 4000; // never block the page on a slow network
 const READY_RATIO = 0.6; // share of the video buffered before we let go
 
 /*
