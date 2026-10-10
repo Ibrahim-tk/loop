@@ -1,5 +1,6 @@
 'use client';
 
+import Logo from '@/components/brand/Logo';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
@@ -48,15 +49,11 @@ export default function LandingNavbar({ variant = 'landing' }: LandingNavbarProp
             {/* Navbar */}
             <div className="px-3 sm:px-5 lg:px-8 pt-3">
             <nav
-                className={`${'mx-auto w-full max-w-[var(--content-max)]'} rounded-[12px] border overflow-hidden transition-[background-color,border-color,box-shadow] duration-300 ease-in-out bg-white/35 backdrop-blur-2xl backdrop-saturate-[1.8] border-white/20 shadow-[0_8px_32px_rgba(10,13,18,0.10),inset_0_1px_0_rgba(255,255,255,0.35)]`}
+                className={`${'mx-auto w-full max-w-[var(--content-max)]'} rounded-[12px] border overflow-hidden transition-[background-color,border-color,box-shadow] duration-300 ease-in-out bg-white/60 backdrop-blur-2xl backdrop-saturate-[1.8] border-white/20 shadow-[0_8px_32px_rgba(10,13,18,0.10),inset_0_1px_0_rgba(255,255,255,0.35)]`}
             >
                 <div className="h-[var(--navbar-height)] flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] gap-6 xl:gap-8 pl-5 pr-2.5">
                     <Link href="/" className="relative shrink-0 flex items-center justify-self-start h-[22px] sm:h-[26px]" onClick={() => setIsOpen(false)}>
-                        <img
-                            src="/brand/logo-dark.png"
-                            alt="Fasana Homes"
-                            className={`h-full w-auto object-contain transition-opacity duration-300 opacity-100`}
-                        />
+                        <Logo markClassName="h-[26px] sm:h-[31px]" className="h-full gap-3 text-[20px] sm:text-[22px] text-[color:var(--text-primary)]" />
                     </Link>
 
                     <div className="hidden lg:flex items-center gap-1 xl:gap-2">

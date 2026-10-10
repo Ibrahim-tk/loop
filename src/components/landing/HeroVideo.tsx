@@ -12,7 +12,7 @@ export default function HeroVideo() {
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="auto"
                 poster={POSTER_SRC}
                 aria-hidden="true"
                 className="absolute inset-0 w-full h-full object-cover"
@@ -24,7 +24,7 @@ export default function HeroVideo() {
             </video>
 
             {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/35" />
+            <div className="absolute inset-0 bg-black/55" />
         </div>
     );
 }

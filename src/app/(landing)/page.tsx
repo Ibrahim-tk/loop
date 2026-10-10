@@ -8,6 +8,7 @@ import LandingBrowse from '@/components/landing/LandingBrowse';
 import LandingFAQ from '@/components/landing/LandingFAQ';
 import LandingTestimonials from '@/components/landing/LandingTestimonials';
 import LandingCTA from '@/components/landing/LandingCTA';
+import Preloader from '@/components/landing/Preloader';
 import Footer from '@/components/marketing/Footer';
 import type { Metadata } from 'next';
 
@@ -61,6 +62,7 @@ export default async function LandingPage() {
         <div className="flex flex-col items-center relative">
             <LandingNavbar />
 
+            <Preloader />
             <LandingSearchHero cities={cities} types={types} />
 
             <LandingListingRow title="Featured properties" properties={featured} viewAllHref="/properties" />

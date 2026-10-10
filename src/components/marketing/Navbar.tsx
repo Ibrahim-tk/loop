@@ -1,5 +1,6 @@
 'use client';
 
+import { LogoMark } from '@/components/brand/Logo';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -36,13 +37,7 @@ export default function Navbar() {
                 <div className="flex h-20 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-[9px] group">
-                        <Image
-                            src="/brand/logo-icon.png"
-                            alt="Fasana Homes"
-                            width={42}
-                            height={50}
-                            className="shrink-0 object-contain"
-                        />
+                        <LogoMark title="Fasana Homes" className="h-[50px] w-auto" />
                         <div className="flex flex-col">
                             <span className="text-[16px] font-bold tracking-tight text-white leading-tight">
                                 FASANA

@@ -1,5 +1,6 @@
 'use client';
 
+import Logo from '@/components/brand/Logo';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -77,11 +78,7 @@ export default function LoginPage() {
                 {/* Logo */}
                 <div className="text-center mb-10">
                     <Link href="/" className="inline-block mb-6">
-                        <img
-                            src="/brand/logo-dark.png"
-                            alt="Fasana Homes"
-                            className="h-[36px] sm:h-[40px] w-auto object-contain mx-auto"
-                        />
+                        <Logo className="h-[36px] sm:h-[40px] text-[28px] sm:text-[32px] text-[color:var(--text-primary)]" />
                     </Link>
                     <h1 className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)]">
                         Welcome back

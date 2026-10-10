@@ -1,5 +1,6 @@
 'use client';
 
+import { LogoMark } from '@/components/brand/Logo';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -61,13 +62,7 @@ export function Sidebar({ leadsBadge = 0, viewingsBadge = 0 }: SidebarProps) {
                 {/* Header */}
                 <div className="flex items-center gap-3 px-6 py-5">
                     <Link href="/" className="flex items-center gap-3 flex-1 group">
-                        <Image
-                            src="/brand/logo-icon.png"
-                            alt="Fasana Homes"
-                            width={32}
-                            height={32}
-                            className="object-contain group-hover:scale-105 transition-transform"
-                        />
+                        <LogoMark title="Fasana Homes" className="h-8 w-auto group-hover:scale-105 transition-transform" />
                         <div>
                             <h2 className="text-sm font-semibold">FASANA</h2>
                             <p className="text-xs text-muted-foreground">HOMES</p>

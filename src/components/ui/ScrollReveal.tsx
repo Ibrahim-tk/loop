@@ -25,18 +25,25 @@ export default function ScrollReveal() {
         style.textContent = `:is(${TARGETS}):not(${EXCLUDE}) { opacity: 0; }`;
         document.head.appendChild(style);
 
-        const show = (el: Element, duration: number) =>
-            el.animate([HIDDEN, SHOWN], {
+        const show = (el: HTMLElement, duration: number) => {
+            const anim = el.animate([HIDDEN, SHOWN], {
                 duration,
                 easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
                 fill: 'forwards',
             });
+            // Hand control back once done: a held WAAPI transform would override the
+            // element's own CSS animations (e.g. the marquee track)
+            anim.onfinish = () => {
+                el.style.opacity = '1';
+                anim.cancel();
+            };
+        };
 
         const io = new IntersectionObserver(
             (entries) => {
                 for (const entry of entries) {
                     if (!entry.isIntersecting) continue;
-                    show(entry.target, 800);
+                    show(entry.target as HTMLElement, 800);
                     io.unobserve(entry.target);
                 }
             },
@@ -46,7 +53,7 @@ export default function ScrollReveal() {
 
         const bound = new WeakSet<Element>();
         const scan = () => {
-            document.querySelectorAll(TARGETS).forEach((el) => {
+            document.querySelectorAll<HTMLElement>(TARGETS).forEach((el) => {
                 if (bound.has(el) || el.closest(EXCLUDE)) return;
                 bound.add(el);
                 // Fixed/sticky chrome like navbars and trays shows immediately

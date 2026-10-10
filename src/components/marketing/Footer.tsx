@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/brand/Logo';
 import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { createPublicClient } from '@/lib/supabase/server';
 import { PUBLIC_STATUSES } from '@/lib/properties';
@@ -118,7 +119,7 @@ export default async function Footer() {
                     {/* Brand + CTA */}
                     <div className="flex flex-col gap-8">
                         <Link href="/" className="w-fit">
-                            <img src="/brand/logo-dark.png" alt="Fasana Homes" className="h-[36px] w-auto object-contain" />
+                            <Logo className="h-[36px] text-[28px] text-[color:var(--text-primary)]" />
                         </Link>
                         <p className="max-w-[320px] text-[length:var(--typeface-heading-h4)] leading-snug text-[color:var(--on-surface-default)]">
                             Find your next home in Punjab and across Pakistan.
