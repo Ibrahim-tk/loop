@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Icon3D from '@/components/ui/Icon3D';
 import Image from 'next/image';
 import { EnvelopeSimple, Phone, ChatCircle, Check } from '@phosphor-icons/react';
 import { submitLead } from '@/lib/actions/leads';
@@ -69,10 +70,8 @@ export default function ContactPage() {
                     {/* Right: Contact Form */}
                     <div className="flex-1 bg-[var(--surface-default)] p-6 sm:p-8 lg:p-12">
                         {submitted ? (
-                            <div className="flex flex-col items-center justify-center py-12 gap-6">
-                                <div className="w-16 h-16 rounded-full flex items-center justify-center border border-[var(--feedback-success)]" style={{ backgroundColor: 'color-mix(in srgb, var(--feedback-success) 10%, transparent)' }}>
-                                    <Check size={32} weight="bold" className="text-[var(--feedback-success)]" />
-                                </div>
+                            <div className="blur-rise flex flex-col items-center justify-center py-12 gap-6">
+                                <Icon3D name="check" size={104} />
                                 <h3 className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)]">
                                     Message Sent!
                                 </h3>

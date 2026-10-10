@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Upload, X, ImageIcon, Star } from 'lucide-react';
+import { Upload, X, ImageIcon, Star } from '@/components/admin/icons';
 import toast from 'react-hot-toast';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -112,7 +112,7 @@ export default function ImageUploader({
                 onDragLeave={() => setDragOver(false)}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
+                className={`relative border-2 border-dashed rounded-md p-8 text-center cursor-pointer transition-all ${
                     dragOver
                         ? 'border-accent-500 bg-accent-500/10'
                         : 'border-white/20 hover:border-white/30 hover:bg-white/5'
@@ -145,7 +145,7 @@ export default function ImageUploader({
                         {images.map((image, index) => (
                             <div
                                 key={image.id || index}
-                                className={`relative group aspect-square rounded-xl overflow-hidden bg-white/5 border transition-all ${
+                                className={`relative group aspect-square rounded-md overflow-hidden bg-white/5 border transition-all ${
                                     index === 0
                                         ? 'border-accent-500 ring-2 ring-accent-500/30'
                                         : 'border-white/10 hover:border-white/20'
@@ -171,7 +171,7 @@ export default function ImageUploader({
 
                                 {/* Primary badge */}
                                 {index === 0 && (
-                                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-accent-500 text-white text-[10px] font-semibold">
+                                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-accent-500 text-white text-[10px] font-semibold">
                                         PRIMARY
                                     </div>
                                 )}
@@ -182,7 +182,7 @@ export default function ImageUploader({
                                         <button
                                             type="button"
                                             onClick={() => setAsPrimary(index)}
-                                            className="p-1.5 rounded-lg bg-amber-500/80 text-white hover:bg-amber-500 transition-colors"
+                                            className="p-2 rounded-md bg-amber-500/80 text-white hover:bg-amber-500 transition-colors"
                                             title="Set as primary"
                                         >
                                             <Star className="h-3.5 w-3.5" />
@@ -191,7 +191,7 @@ export default function ImageUploader({
                                     <button
                                         type="button"
                                         onClick={() => removeImage(index)}
-                                        className="p-1.5 rounded-lg bg-red-500/80 text-white hover:bg-red-500 transition-colors"
+                                        className="p-2 rounded-md bg-red-500/80 text-white hover:bg-red-500 transition-colors"
                                         title="Remove image"
                                     >
                                         <X className="h-3.5 w-3.5" />
@@ -199,13 +199,13 @@ export default function ImageUploader({
                                 </div>
 
                                 {/* Index badge */}
-                                <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/50 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/50 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
                                     {index + 1}
                                 </div>
 
                                 {/* Existing vs New indicator */}
                                 {image.file && (
-                                    <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-emerald-500/80 text-white text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-emerald-500/80 text-white text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                                         NEW
                                     </div>
                                 )}

@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Plus, Building, Search, Eye, Trash2, Pencil, Star, ExternalLink, Loader2, X } from 'lucide-react';
+import { Plus, Building, Search, Eye, Trash2, Pencil, Star, ExternalLink, Loader2, X } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { deleteProperty as deletePropertyAction, updateProperty } from '@/lib/actions/properties';
-import { Property, PropertyStatus } from '@/lib/types';
+import { Property } from '@/lib/types';
 import { formatListingPrice, LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/properties';
 import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,17 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useAdminTheme } from '@/components/admin/AdminThemeProvider';
-
-const STATUS_LABELS: Record<string, string> = {
-    AVAILABLE: 'Available',
-    PENDING: 'Pending',
-    RENTED: 'Rented',
-    SOLD: 'Sold',
-    SHOWCASE: 'Showcase',
-    RENOVATION: 'Off market',
-    UNDER_MANAGEMENT: 'Onboarding',
-    UNLISTED: 'Unlisted',
-};
 
 const selectClass =
     'h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
@@ -35,7 +24,6 @@ export default function AdminPropertiesPage() {
     const [loadError, setLoadError] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [search, setSearch] = useState('');
-    const [status, setStatus] = useState('');
     const [listing, setListing] = useState('');
     const [type, setType] = useState('');
     const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -65,18 +53,16 @@ export default function AdminPropertiesPage() {
         const q = search.trim().toLowerCase();
         return properties.filter((p) => {
             if (q && ![p.title, p.address, p.city, p.agent_name].some((v) => v?.toLowerCase().includes(q))) return false;
-            if (status && p.status !== status) return false;
             if (listing && p.listing_type !== listing) return false;
             if (type && p.property_type !== type) return false;
             if (featuredOnly && !p.featured) return false;
             return true;
         });
-    }, [properties, search, status, listing, type, featuredOnly]);
+    }, [properties, search, listing, type, featuredOnly]);
 
-    const hasFilters = Boolean(search || status || listing || type || featuredOnly);
+    const hasFilters = Boolean(search || listing || type || featuredOnly);
     const clearFilters = () => {
         setSearch('');
-        setStatus('');
         setListing('');
         setType('');
         setFeaturedOnly(false);
@@ -109,16 +95,6 @@ export default function AdminPropertiesPage() {
         }
     };
 
-    const changeStatus = async (prop: Property, next: string) => {
-        patch(prop.id, { status: next as PropertyStatus });
-        try {
-            await updateProperty(prop.id, { status: next as PropertyStatus });
-            toast.success(`Status changed to ${STATUS_LABELS[next]}`);
-        } catch {
-            patch(prop.id, { status: prop.status });
-            toast.error('Failed to update status');
-        }
-    };
 
     return (
         <div className="space-y-6">
@@ -150,10 +126,6 @@ export default function AdminPropertiesPage() {
                         className="h-9 w-full rounded-md border border-input bg-transparent pl-9 pr-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     />
                 </div>
-                <select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)} className={selectClass}>
-                    <option value="">All statuses</option>
-                    {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                </select>
                 <select aria-label="Listing type" value={listing} onChange={(e) => setListing(e.target.value)} className={selectClass}>
                     <option value="">Sale &amp; rent</option>
                     <option value="SALE">For sale</option>
@@ -203,7 +175,6 @@ export default function AdminPropertiesPage() {
                                         <TableHead>Property</TableHead>
                                         <TableHead>Type</TableHead>
                                         <TableHead>Price</TableHead>
-                                        <TableHead>Status</TableHead>
                                         <TableHead>Views</TableHead>
                                         <TableHead className="text-right">Actions</TableHead>
                                     </TableRow>
@@ -220,7 +191,7 @@ export default function AdminPropertiesPage() {
                                                             {img && <Image src={img} alt="" fill className="object-cover" sizes="56px" />}
                                                         </div>
                                                         <div>
-                                                            <p className="font-medium text-sm flex items-center gap-1.5">
+                                                            <p className="font-medium text-sm flex items-center gap-2">
                                                                 {prop.title}
                                                                 {prop.featured && <Star className="h-3 w-3 fill-current text-amber-500" aria-label="Featured" />}
                                                             </p>
@@ -237,17 +208,7 @@ export default function AdminPropertiesPage() {
                                                     {price.suffix && <span className="text-muted-foreground font-normal"> {price.suffix}</span>}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <select
-                                                        aria-label={`Status for ${prop.title}`}
-                                                        value={prop.status}
-                                                        onChange={(e) => changeStatus(prop, e.target.value)}
-                                                        className={selectClass}
-                                                    >
-                                                        {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                                                    </select>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <span className="flex items-center gap-1.5 text-muted-foreground text-xs">
+                                                    <span className="flex items-center gap-2 text-muted-foreground text-xs">
                                                         <Eye className="h-3 w-3" />{prop.view_count}
                                                     </span>
                                                 </TableCell>

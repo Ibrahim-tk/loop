@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from '@/components/admin/icons';
 import Link from 'next/link';
 
 interface MetricCardProps {
@@ -50,7 +50,7 @@ export default function MetricCard({
                     )}
                 </div>
                 <div className="relative">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 group-hover:bg-accent-500/20 group-hover:scale-110 transition-all duration-300">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-md bg-accent-500/10 text-accent-400 group-hover:bg-accent-500/20 group-hover:scale-110 transition-all duration-300">
                         <Icon className="h-6 w-6" />
                     </div>
                     {badge !== undefined && badge > 0 && (

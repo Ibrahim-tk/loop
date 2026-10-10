@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Icon3D from '@/components/ui/Icon3D';
 import { ArrowLeft, CalendarCheck, CheckCircle, Clock, LockSimple, SpinnerGap, WarningCircle } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import { requestViewing } from '@/lib/actions/viewings';
@@ -42,7 +43,7 @@ function validateDetails(d: Details): DetailErrors {
 const inputClass =
     'w-full p-3 border rounded-[6px] bg-white text-[length:var(--typeface-paragraph-text)] outline-none transition-colors focus:border-[var(--action-primary)] border-[var(--outline-default)] aria-[invalid=true]:border-[var(--border-danger)]';
 const primaryBtn =
-    'inline-flex items-center justify-center gap-2 h-12 px-6 rounded-[6px] bg-[var(--action-primary)] text-[color:var(--text-inverse)] text-[length:var(--typeface-paragraph-text-s)] font-medium hover:bg-[var(--action-primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--action-primary)]';
+    'btn-primary disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--action-primary)]';
 
 export default function ViewingBooking({ property }: { property: Pick<Property, 'id' | 'title' | 'status' | 'address' | 'city'> }) {
     const [step, setStep] = useState<Step>('date');
@@ -147,8 +148,8 @@ export default function ViewingBooking({ property }: { property: Pick<Property, 
 
     if (step === 'done') {
         return (
-            <div className="flex flex-col items-center text-center gap-3 py-4" role="status">
-                <CheckCircle size={48} weight="fill" className="text-[color:var(--text-attention)]" />
+            <div className="blur-rise flex flex-col items-center text-center gap-3 py-4" role="status">
+                <Icon3D name="check" size={88} className="mb-1" />
                 <h4 className="font-display text-[length:var(--typeface-heading-h4)]">Viewing requested</h4>
                 <p className="text-[color:var(--text-secondary)]">
                     {formatViewingDate(date)} at {formatSlot(slot)}

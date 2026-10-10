@@ -1,20 +1,44 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { usePrefs } from '@/lib/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
     Bed, Bathtub, Car, CalendarDots, ArrowsOut,
     ArrowLeft, ArrowRight, CaretRight, CaretDown,
-    MapPin, X, Check, Phone, EnvelopeSimple, CalendarCheck, ChatCircleText,
+    MapPin, X, Check, CalendarCheck, ShareNetwork, ArrowUpRight, Scales, ChatCircleText,
 } from '@phosphor-icons/react';
 import { ImageIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Property } from '@/lib/types';
 import { formatArea, formatListingPrice, FURNISHING_LABELS, LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS, STATUS_LABELS } from '@/lib/properties';
-import { FavouriteButton, CompareButton } from '@/components/listings/SaveCompareButtons';
+import { FavouriteButton } from '@/components/listings/SaveCompareButtons';
+import BookingModal from '@/components/listings/BookingModal';
+import CompareModal from '@/components/listings/CompareModal';
+import ShareModal from '@/components/listings/ShareModal';
 import LandingContactForm from '@/components/landing/LandingContactForm';
 import ViewingBooking from '@/components/listings/ViewingBooking';
+import PropertyCard from '@/components/listings/PropertyCard';
+import WhatsappIcon from '@/components/ui/WhatsappIcon';
+import { BOOKABLE_STATUSES } from '@/lib/viewings';
+import { WHATSAPP_URL } from '@/lib/constants/contact';
+
+/** Sidebar cards on the listing page. */
+const SIDE_CARD = 'scroll-mt-[calc(var(--header-height)+16px)] bg-[var(--surface-default)] rounded-[8px] p-5 flex flex-col gap-4';
+
+function CardHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+    return (
+        <h3 className="flex items-center gap-2.5 text-[length:var(--typeface-heading-h5)] leading-7">
+            <span className="text-[color:var(--action-primary-hover)]">{icon}</span>
+            {children}
+        </h3>
+    );
+}
+
+/** Square icon buttons in the listing header. */
+const ICON_ACTION =
+    'flex items-center justify-center size-11 rounded-[8px] bg-[var(--bg-gray-block)] text-[color:var(--text-primary)] hover:bg-[var(--bg-page)] backdrop-blur-none';
 
 // ─── Lightbox Modal ──────────────────────────────────────────────────
 // Matches Figma node 90-5067 exactly
@@ -227,111 +251,6 @@ function LightboxModal({
     );
 }
 
-// ─── Similar Property Card ───────────────────────────────────────────
-function SimilarPropertyCard({ property }: { property: Property }) {
-    const [imageError, setImageError] = useState(false);
-    const mainImage = property.property_images?.sort((a, b) => a.display_order - b.display_order)?.[0]?.storage_url;
-    const hasValidImage = mainImage && !imageError;
-
-    const statusLabel =
-        property.status === 'AVAILABLE' ? 'For Rent' :
-            property.status === 'PENDING' ? 'Pending' :
-                property.status.replace('_', ' ');
-
-    const handleClick = () => {
-        const supabase = createClient();
-        supabase.rpc('increment_click', { row_id: property.id }).then(() => {});
-    };
-
-    return (
-        <Link
-            onClick={handleClick}
-            href={`/rentals/${property.id}`}
-            className="bg-white flex flex-col rounded-[4px] overflow-hidden min-w-[300px] w-[300px] lg:min-w-[420px] lg:w-[420px] shrink-0 hover:shadow-lg transition-shadow"
-        >
-            {/* Image */}
-            <div className="relative h-[274px] overflow-hidden bg-gray-100">
-                {hasValidImage ? (
-                    <Image
-                        src={mainImage}
-                        alt={property.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 300px, 420px"
-                        onError={() => setImageError(true)}
-                    />
-                ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                        <ImageIcon className="h-12 w-12 text-gray-300 mb-2" />
-                        <span className="text-sm text-gray-400">No image</span>
-                    </div>
-                )}
-                {/* Tag */}
-                <div className="absolute top-3 right-3">
-                    {property.featured ? (
-                        <span className="inline-flex items-center px-2 py-0.5 text-[14px] font-normal text-white bg-[rgba(10,49,97,0.2)] backdrop-blur-[12px] rounded-[4px]">
-                            Most Popular
-                        </span>
-                    ) : (
-                        <span className="inline-flex items-center px-2 py-1 text-[length:var(--typeface-paragraph-text)] font-light text-white bg-[rgba(0,0,0,0.3)] backdrop-blur-[12px]">
-                            {statusLabel}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col p-5">
-                <div className="flex flex-col gap-5">
-                    {/* Title + Location + Stats */}
-                    <div className="flex flex-col gap-3 border-b border-[var(--outline-default)] pb-5">
-                        <div className="flex flex-col gap-3">
-                            <h3 className="text-[length:var(--typeface-heading-h4)] font-normal text-[color:var(--on-surface-default)] leading-normal line-clamp-1">
-                                {property.title}
-                            </h3>
-                            <p className="text-[length:var(--typeface-paragraph-text)] font-light text-[color:var(--on-surface-variant)] leading-6 line-clamp-1">
-                                {property.address}, {property.city} {property.zip}
-                            </p>
-                        </div>
-                        <div className="flex items-end justify-between text-[length:var(--typeface-paragraph-text)] font-light text-[color:var(--on-surface-variant)]">
-                            <span className="flex items-center gap-1.5">
-                                <Bed size={24} weight="light" />
-                                {property.bedrooms} beds
-                            </span>
-                            <span className="h-5 w-px bg-[var(--outline-default)]" />
-                            <span className="flex items-center gap-1.5">
-                                <Bathtub size={24} weight="light" />
-                                {property.bathrooms} baths
-                            </span>
-                            <span className="h-5 w-px bg-[var(--outline-default)]" />
-                            <span className="flex items-center gap-1.5">
-                                <ArrowsOut size={24} weight="light" />
-                                {property.sqft} m&sup2;
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Price + View Details */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)] leading-8">
-                                {formatListingPrice(property).amount}
-                            </span>
-                            {formatListingPrice(property).suffix && (
-<span className="text-[length:var(--typeface-paragraph-text-s)] font-light leading-6">{formatListingPrice(property).suffix}</span>)}
-                        </div>
-                        <span className="flex items-center gap-2 text-[14px] font-medium text-[color:var(--on-surface-default)]">
-                            View Details
-                            <ArrowRight size={24} />
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-// ─── Main Page ───────────────────────────────────────────────────────
 export default function PropertyDetailClient({
     property,
     similarProperties: initialSimilarProperties,
@@ -339,6 +258,7 @@ export default function PropertyDetailClient({
     property: Property;
     similarProperties: Property[];
 }) {
+    usePrefs(); // re-render when currency / area unit changes
     const [currentImage, setCurrentImage] = useState(0);
     const [imageError, setImageError] = useState<Record<number, boolean>>({});
     const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({});
@@ -384,7 +304,7 @@ export default function PropertyDetailClient({
         { icon: Bathtub, label: 'Bathrooms', value: property.bathrooms },
         { icon: Car, label: 'Parking', value: property.garage != null ? property.garage : '—' },
         { icon: CalendarDots, label: 'Year Built', value: property.year_built != null ? property.year_built : '—' },
-        { icon: ArrowsOut, label: 'Area (sq ft)', value: property.sqft ? property.sqft.toLocaleString() : '—' },
+        { icon: ArrowsOut, label: 'Area', value: property.sqft ? formatArea(property.sqft) : '—' },
     ];
 
     // Build highlights from DB data or fall back to defaults
@@ -407,8 +327,10 @@ export default function PropertyDetailClient({
         highlights.push(rawHighlights.slice(i, i + 3));
     }
 
-    const googleMapsUrl = property.google_maps_url;
-    const zillowUrl = property.zillow_url;
+    const bookable = BOOKABLE_STATUSES.includes(property.status);
+    const [bookingOpen, setBookingOpen] = useState(false);
+    const [compareOpen, setCompareOpen] = useState(false);
+    const [shareOpen, setShareOpen] = useState(false);
 
     return (
         <>
@@ -426,9 +348,13 @@ export default function PropertyDetailClient({
                 />
             )}
 
+            <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} property={property} />
+            <CompareModal open={compareOpen} onOpenChange={setCompareOpen} current={property} />
+            <ShareModal open={shareOpen} onOpenChange={setShareOpen} path={`/rentals/${property.id}`} title={property.title} />
+
             {/* ── Section: Breadcrumb + Main Content ──────────────────── */}
             <section className="bg-[var(--surface-variant)] min-h-screen pt-[var(--header-height)]">
-                <div className="flex flex-col gap-8 px-5 sm:px-8 lg:px-10 py-8 sm:py-10 lg:py-12">
+                <div className="mx-auto w-full max-w-[var(--content-max)] flex flex-col gap-8 px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 lg:pt-12 pb-[var(--section-y)]">
 
                     {/* Breadcrumb */}
                     <div className="lg:px-8">
@@ -451,58 +377,51 @@ export default function PropertyDetailClient({
                     <div className="flex flex-col lg:flex-row gap-6 lg:px-6">
 
                         {/* ── Left Column ─────────────────────────────── */}
-                        <div className="bg-white rounded-[4px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.04)] flex-1 p-3.5 sm:p-5 flex flex-col gap-6">
+                        <div className="bg-white rounded-[8px] overflow-hidden flex-1 min-w-0 p-5 sm:p-6 flex flex-col gap-6">
 
-                            {/* Header: Tags + Title + Price */}
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                                <div className="flex flex-col gap-2">
-                                    {/* Most Popular Tag */}
-                                    {property.featured && (
-                                        <div className="self-start">
-                                            <span className="inline-flex items-center px-2 py-0.5 text-[14px] font-normal text-[color:var(--on-surface-default)] bg-[var(--surface-container-lowest)] backdrop-blur-[12px] rounded-[4px] leading-5">
-                                                ★ Featured
-                                            </span>
-                                        </div>
-                                    )}
-                                    {/* Title + Available Badge */}
+                            {/* Header: title → location → price, icon actions on the right */}
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+                                <div className="flex flex-col gap-3 min-w-0">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <h1 className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)] leading-8">
-                                            {property.title}
-                                        </h1>
-                                        <span className="inline-flex items-center px-2 py-0.5 text-[14px] font-normal text-[var(--feedback-success)] bg-[rgba(21,128,61,0.1)] backdrop-blur-[12px] rounded-[4px] leading-5">
+                                        {property.featured && <span className="pill-glass !bg-[var(--color-gray-600)]">Featured</span>}
+                                        <span className="inline-flex items-center px-2 py-0.5 text-[14px] font-normal text-[var(--feedback-success)] bg-[rgba(21,128,61,0.1)] rounded-[4px] leading-5">
                                             {STATUS_LABELS[property.status] ?? property.status.replace('_', ' ')} · {LISTING_TYPE_LABELS[property.listing_type]}
                                         </span>
                                     </div>
-                                    {/* Location */}
+                                    <h1 className="text-[length:var(--typeface-heading-h2)] leading-[1.1] text-[color:var(--on-surface-default)]">
+                                        {property.title}
+                                    </h1>
                                     <div className="flex items-center gap-2">
                                         <MapPin size={20} weight="regular" className="text-[color:var(--on-surface-variant)] shrink-0" />
                                         <p className="text-[length:var(--typeface-paragraph-text)] font-light text-[color:var(--on-surface-variant)] leading-6">
                                             {property.address}, {property.city} {property.zip}
                                         </p>
                                     </div>
-                                </div>
-                                {/* Price + save/compare */}
-                                <div className="flex flex-col items-start sm:items-end gap-3 shrink-0">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-[length:var(--typeface-heading-h2)] font-normal text-[color:var(--on-surface-default)] leading-9">
+                                    <div className="flex items-baseline gap-1 mt-1">
+                                        <span className="text-[length:var(--typeface-heading-h4)] font-medium text-[color:var(--on-surface-default)] leading-8">
                                             {formatListingPrice(property).amount}
                                         </span>
                                         {formatListingPrice(property).suffix && (
-                                            <span className="text-[length:var(--typeface-heading-subheading)] font-light text-[color:var(--on-surface-default)] leading-7">{formatListingPrice(property).suffix}</span>
+                                            <span className="text-[length:var(--typeface-paragraph-text)] font-light text-[color:var(--on-surface-variant)]">{formatListingPrice(property).suffix}</span>
                                         )}
                                     </div>
-                                    <div className="flex gap-2">
-                                        <FavouriteButton propertyId={property.id} propertyTitle={property.title} variant="full" />
-                                        <CompareButton propertyId={property.id} propertyTitle={property.title} variant="full" />
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <a href="#book-viewing" className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-[6px] bg-[var(--action-primary)] text-[color:var(--text-inverse)] text-[length:var(--typeface-paragraph-text-s)] font-medium hover:bg-[var(--action-primary-hover)] transition-colors">
-                                            <CalendarCheck size={18} /> Book a viewing
-                                        </a>
-                                        <a href="#ask-question" className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-[6px] border border-[var(--outline-default)] bg-white text-[length:var(--typeface-paragraph-text-s)] font-medium hover:border-[var(--action-border-hover)] transition-colors">
-                                            <ChatCircleText size={18} /> Enquire
-                                        </a>
-                                    </div>
+                                </div>
+                                {/* Icon actions: save, share, WhatsApp the team about this listing */}
+                                <div className="flex gap-2 shrink-0" role="toolbar" aria-label="Property actions">
+                                    <FavouriteButton propertyId={property.id} propertyTitle={property.title} className={ICON_ACTION} />
+                                    <button type="button" onClick={() => setShareOpen(true)} aria-label="Share this property" title="Share" className={ICON_ACTION}>
+                                        <ShareNetwork size={20} />
+                                    </button>
+                                    <a
+                                        href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hi, I'm interested in "${property.title}" (${property.city}). ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="Ask about this property on WhatsApp"
+                                        title="Ask on WhatsApp"
+                                        className={`${ICON_ACTION} !bg-[var(--action-primary)] !text-white hover:!bg-[var(--action-primary-hover)]`}
+                                    >
+                                        <WhatsappIcon size={20} />
+                                    </a>
                                 </div>
                             </div>
 
@@ -737,109 +656,53 @@ export default function PropertyDetailClient({
                         {/* ── Right Column ────────────────────────────── */}
                         <div className="lg:w-[390px] shrink-0 flex flex-col gap-6">
 
-                            {/* ── Location Widget ─────────────────────── */}
-                            {(googleMapsUrl || zillowUrl) && (
-                                <div className="bg-[var(--surface-default)] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.04)] rounded-[4px] p-3.5 sm:p-5 flex flex-col gap-4 ">
-                                    {/* Location Header */}
-                                    <div className="flex flex-col gap-2">
-                                        <h3 className="text-[length:var(--typeface-heading-h4)] font-normal text-[color:var(--on-surface-default)] leading-normal">
-                                            Location
-                                        </h3>
-                                    </div>
-
-                                    {/* Map */}
-                                    {googleMapsUrl && (
-                                        <div className="flex flex-col gap-2.5">
-                                            <a
-                                                href={googleMapsUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="relative h-[188px] rounded-[4px] overflow-hidden bg-[var(--surface-container-primary)] block group cursor-pointer"
-                                            >
-                                                <Image 
-                                                    src="/landing-page/map-preview.webp"
-                                                    alt="Map Preview"
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors z-10" />
-                                                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 gap-2">
-                                                    <MapPin size={32} weight="fill" className="text-white" />
-                                                    <span className="font-medium text-[14px] text-white underline decoration-solid leading-[normal]">
-                                                        View on map
-                                                    </span>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    )}
-
-                                    {/* ── Zillow Link ─────────────────────────── */}
-                                    {zillowUrl && (
-                                        <a 
-                                            href={zillowUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="bg-[var(--surface-container-lowest)] rounded-[var(--radius-sm)] p-4 flex flex-col gap-[13px] hover:bg-[var(--surface-container-low)] transition-colors block group cursor-pointer"
-                                        >
-                                            <p className="text-[length:var(--typeface-paragraph-text-s)] font-normal text-[color:var(--on-surface-variant)] leading-5">
-                                                View this listing on Zillow.com.
-                                            </p>
-                                            <div className="flex items-end gap-3">
-                                                <span className="text-[14px] font-medium text-[color:var(--on-surface-default)] underline decoration-solid group-hover:text-blue-600 transition-colors">
-                                                    View on
-                                                </span>
-                                                <span className="text-[20px] font-bold text-[var(--text-attention)] leading-6">
-                                                    Zillow
-                                                </span>
-                                            </div>
-                                        </a>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* ── Agent ───────────────────────────────── */}
-                            {property.agent_name && (
-                                <div className="bg-[var(--surface-default)] shadow-[0_10px_40px_rgba(0,0,0,0.04)] rounded-[4px] p-3.5 sm:p-5 flex flex-col gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="relative w-16 h-16 rounded-full overflow-hidden bg-[var(--surface-container-highest)] shrink-0">
-                                            {property.agent_photo_url && <Image src={property.agent_photo_url} alt="" fill sizes="64px" className="object-cover" />}
-                                        </div>
-                                        <div>
-                                            <p className="text-[12px] uppercase tracking-wide text-[color:var(--on-surface-variant)]">Listing agent</p>
-                                            <p className="text-[length:var(--typeface-heading-subheading)] leading-6">{property.agent_name}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col gap-2 text-[length:var(--typeface-paragraph-text-s)]">
-                                        {property.agent_phone && (
-                                            <a href={`tel:${property.agent_phone.replace(/[^+\d]/g, '')}`} className="inline-flex items-center gap-2 hover:underline">
-                                                <Phone size={18} /> {property.agent_phone}
-                                            </a>
-                                        )}
-                                        {property.agent_email && (
-                                            <a href={`mailto:${property.agent_email}`} className="inline-flex items-center gap-2 hover:underline">
-                                                <EnvelopeSimple size={18} /> {property.agent_email}
-                                            </a>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* ── Book a viewing ──────────────────────── */}
-                            <div id="book-viewing" className="scroll-mt-[calc(var(--header-height)+16px)] bg-[var(--surface-default)] shadow-[0_10px_40px_rgba(0,0,0,0.04)] rounded-[4px] p-3.5 sm:p-5 flex flex-col gap-5">
-                                <div className="flex items-center gap-2 pb-3 border-b border-[var(--outline-default)]">
-                                    <CalendarCheck size={24} />
-                                    <h3 className="text-[length:var(--typeface-heading-h4)] font-normal leading-normal">Book a viewing</h3>
-                                </div>
-                                <ViewingBooking property={property} />
+                            {/* ── Booking ─────────────────────────────── */}
+                            <div id="book-viewing" className={SIDE_CARD}>
+                                <CardHeading icon={<CalendarCheck size={22} />}>Book a viewing</CardHeading>
+                                {bookable ? (
+                                    <>
+                                        <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">Free, 30 minutes, no account needed. Pick a day and time that suits you.</p>
+                                        <button type="button" onClick={() => setBookingOpen(true)} className="btn-primary w-full">Choose a time</button>
+                                    </>
+                                ) : (
+                                    <ViewingBooking property={property} />
+                                )}
                             </div>
 
-                            {/* ── Ask a question ──────────────────────── */}
-                            <div id="ask-question" className="scroll-mt-[calc(var(--header-height)+16px)] bg-[var(--surface-default)] shadow-[0_10px_40px_rgba(0,0,0,0.04)] rounded-[4px] p-3.5 sm:p-5 flex flex-col gap-6">
-                                <div className="flex items-center gap-2 pb-3 border-b border-[var(--outline-default)]">
-                                    <ChatCircleText size={24} />
-                                    <h3 className="text-[length:var(--typeface-heading-h4)] font-normal leading-normal">Ask a question</h3>
+                            {/* ── Compare ─────────────────────────────── */}
+                            <div className={SIDE_CARD}>
+                                <CardHeading icon={<Scales size={22} />}>Compare</CardHeading>
+                                <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">See this home side by side with another listing: price, area, rooms and more.</p>
+                                <button type="button" onClick={() => setCompareOpen(true)}
+                                    className="inline-flex items-center justify-center gap-2 h-11 w-full rounded-[8px] ring-1 ring-[var(--outline-default)] text-[length:var(--typeface-paragraph-text-s)] font-medium hover:ring-[var(--action-primary-hover)] hover:text-[color:var(--action-primary-hover)] transition-colors">
+                                    Choose a property to compare
+                                </button>
+                            </div>
+
+                            {/* ── Location (only when the admin added a maps link) ─ */}
+                            {property.google_maps_url && (
+                                <div className={SIDE_CARD}>
+                                    <CardHeading icon={<MapPin size={22} />}>Location</CardHeading>
+                                    <a href={property.google_maps_url} target="_blank" rel="noopener noreferrer"
+                                        className="group relative block h-[200px] rounded-[8px] overflow-hidden">
+                                        <Image src="/landing-page/map-dark.webp" alt={`Map around ${property.address}, ${property.city}`} fill sizes="390px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                                            <span className="flex items-center justify-center size-11 rounded-full bg-[var(--action-primary-hover)] text-white shadow-[0_0_0_8px_rgb(15_149_73/0.25)]">
+                                                <MapPin size={22} weight="fill" />
+                                            </span>
+                                            <span className="pill-glass mt-1">View on map <ArrowUpRight size={14} className="ml-1" /></span>
+                                        </div>
+                                    </a>
+                                    <p className="flex items-start gap-2 text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">
+                                        <MapPin size={16} className="shrink-0 mt-0.5" /> {property.address}, {property.city}
+                                    </p>
                                 </div>
-                                <LandingContactForm />
+                            )}
+
+                            {/* ── Ask a question ──────────────────────── */}
+                            <div id="ask-question" className={SIDE_CARD}>
+                                <CardHeading icon={<ChatCircleText size={22} />}>Ask a question</CardHeading>
+                                <LandingContactForm propertyTitle={property.title} />
                             </div>
                         </div>
                     </div>
@@ -848,13 +711,13 @@ export default function PropertyDetailClient({
 
             {/* ── Section: Similar Properties ──────────────────────── */}
             {similarProperties.length > 0 && (
-                <section className="bg-[var(--surface-variant)] pl-5 sm:pl-8 lg:pl-10 py-12 lg:py-16">
-                    <div className="flex flex-col gap-6 sm:gap-12 px-0 sm:px-2 lg:px-6">
+                <section className="bg-[var(--surface-variant)] px-5 sm:px-8 lg:px-10 pb-[var(--section-y)]">
+                    <div className="mx-auto w-full max-w-[var(--content-max)] flex flex-col gap-[var(--section-head)] lg:px-6">
                         {/* Header */}
-                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pr-5 sm:pr-8 lg:pr-[72px]">
+                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                             {/* Left: Title + Subtitle */}
                             <div className="flex flex-col gap-3 max-w-[637px]">
-                                <h2 className="text-[28px] sm:text-[36px] lg:text-[48px] font-normal text-[color:var(--on-surface-default)] leading-none tracking-[-0.24px]">
+                                <h2 className="text-[length:var(--typeface-heading-h2)] leading-none text-[color:var(--on-surface-default)]">
                                     Similar properties
                                 </h2>
                                 <p className="text-[length:var(--typeface-heading-subheading)] font-light text-[color:var(--on-surface-default)] leading-7">
@@ -889,10 +752,12 @@ export default function PropertyDetailClient({
                         {/* Cards Scroll */}
                         <div
                             ref={scrollRef}
-                            className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide"
+                            className="fade-x flex gap-[var(--grid-col-gap)] overflow-x-auto pb-4 px-8 -mx-8 scrollbar-hide"
                         >
                             {similarProperties.map((p) => (
-                                <SimilarPropertyCard key={p.id} property={p} />
+                                <div key={p.id} className="w-[300px] lg:w-[400px] shrink-0">
+                                    <PropertyCard property={p} viewMode="grid" />
+                                </div>
                             ))}
                         </div>
                     </div>

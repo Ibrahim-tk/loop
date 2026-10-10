@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MessageSquare, Mail, Phone, Building, Calendar, Eye, Trash2, Clock, Search, Copy } from 'lucide-react';
+import { MessageSquare, Mail, Phone, Building, Calendar, Eye, Trash2, Clock, Search, Copy } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -231,8 +231,8 @@ export default function AdminLeadsPage() {
                                     </h4>
                                     <div className="grid gap-4">
                                         <div>
-                                            <p className="text-xs mb-1.5 font-medium text-muted-foreground">Email</p>
-                                            <div className="flex items-center justify-between p-3 rounded-lg border border-border text-sm bg-muted/50 text-foreground">
+                                            <p className="text-xs mb-2 font-medium text-muted-foreground">Email</p>
+                                            <div className="flex items-center justify-between p-3 rounded-md border border-border text-sm bg-muted/50 text-foreground">
                                                 <div className="flex items-center gap-3">
                                                     <Mail className="h-4 w-4 text-muted-foreground" />
                                                     <a href={`mailto:${selectedLead.email}`} className="font-medium hover:underline">
@@ -253,8 +253,8 @@ export default function AdminLeadsPage() {
                                             </div>
                                         </div>
                                         <div>
-                                            <p className="text-xs mb-1.5 font-medium text-muted-foreground">Phone</p>
-                                            <div className="flex items-center justify-between p-3 rounded-lg border border-border text-sm bg-muted/50 text-foreground">
+                                            <p className="text-xs mb-2 font-medium text-muted-foreground">Phone</p>
+                                            <div className="flex items-center justify-between p-3 rounded-md border border-border text-sm bg-muted/50 text-foreground">
                                                 <div className="flex items-center gap-3">
                                                     <Phone className="h-4 w-4 text-muted-foreground" />
                                                     {selectedLead.phone ? (
@@ -289,14 +289,14 @@ export default function AdminLeadsPage() {
                                     </h4>
                                     <div className="grid gap-6">
                                         <div>
-                                            <p className="text-xs mb-1.5 font-medium text-muted-foreground">Type</p>
+                                            <p className="text-xs mb-2 font-medium text-muted-foreground">Type</p>
                                             <div>{getTypeBadge(selectedLead.type)}</div>
                                         </div>
                                         
                                         {(selectedLead.property || selectedLead.type === 'ANALYSIS') && (
                                             <div>
-                                                <p className="text-xs mb-1.5 font-medium text-muted-foreground">Property</p>
-                                                <div className="flex items-start gap-3 p-3 rounded-lg border border-border text-sm bg-muted/50 text-foreground">
+                                                <p className="text-xs mb-2 font-medium text-muted-foreground">Property</p>
+                                                <div className="flex items-start gap-3 p-3 rounded-md border border-border text-sm bg-muted/50 text-foreground">
                                                     <Building className="h-4 w-4 shrink-0 mt-0.5 text-muted-foreground" />
                                                     <span className="font-medium leading-relaxed">{getPropertyDisplay(selectedLead)}</span>
                                                 </div>
@@ -304,8 +304,8 @@ export default function AdminLeadsPage() {
                                         )}
 
                                         <div>
-                                            <p className="text-xs mb-1.5 font-medium text-muted-foreground">Message</p>
-                                            <div className="relative group p-4 rounded-lg text-sm whitespace-pre-wrap border border-border leading-relaxed bg-muted/30 text-foreground">
+                                            <p className="text-xs mb-2 font-medium text-muted-foreground">Message</p>
+                                            <div className="relative group p-4 rounded-md text-sm whitespace-pre-wrap border border-border leading-relaxed bg-muted/30 text-foreground">
                                                 <div className="pr-6">
                                                     {selectedLead.message || 'No additional message provided.'}
                                                 </div>

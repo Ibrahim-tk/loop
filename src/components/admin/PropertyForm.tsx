@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { AlertCircle, ArrowLeft, Link2, Loader2, Plus, Save, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Link2, Loader2, Plus, Save, X } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { saveProperty } from '@/lib/actions/properties';
 import { syncPropertyImages } from '@/lib/admin/propertyImages';
@@ -26,15 +26,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-const STATUS_OPTIONS = [
-    { value: 'AVAILABLE', label: 'Available' },
-    { value: 'PENDING', label: 'Pending' },
-    { value: 'RENTED', label: 'Rented' },
-    { value: 'SOLD', label: 'Sold' },
-    { value: 'SHOWCASE', label: 'Showcase' },
-    { value: 'RENOVATION', label: 'Off market (renovation)' },
-    { value: 'UNLISTED', label: 'Unlisted (hidden)' },
-];
 
 const selectClass =
     'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-destructive';
@@ -236,15 +227,6 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                         </select>
                         <ErrorText name="property_type" />
                     </div>
-                    <div>
-                        <Label htmlFor="pf-status">Status *</Label>
-                        <select {...text('status')} className={selectClass}>
-                            {STATUS_OPTIONS.map((o) => (
-                                <option key={o.value} value={o.value}>{o.label}</option>
-                            ))}
-                        </select>
-                        <p className="text-xs text-muted-foreground mt-1">Off-market and unlisted properties are hidden from the public catalogue.</p>
-                    </div>
                     <label className="flex items-center gap-3 self-center rounded-md border p-3 cursor-pointer">
                         <input type="checkbox" checked={form.featured} onChange={(e) => set('featured', e.target.checked)} className="h-4 w-4 accent-[var(--color-green-500)]" />
                         <span>
@@ -268,7 +250,7 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                     </div>
                     <div className="sm:col-span-4">
                         <Label htmlFor="pf-city">City *</Label>
-                        <Input placeholder="San Diego" {...text('city')} />
+                        <Input placeholder="Lahore" {...text('city')} />
                         <ErrorText name="city" />
                     </div>
                     <div className="sm:col-span-2">
@@ -336,7 +318,7 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                 <CardHeader>
                     <CardTitle>Description &amp; features</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-5">
+                <CardContent className="space-y-6">
                     <div>
                         <Label htmlFor="pf-description">Description *</Label>
                         <Textarea rows={5} placeholder="What makes this property stand out?" {...text('description')} />
@@ -367,7 +349,7 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                                 {form.features.map((f) => (
                                     <Badge key={f} variant="secondary" className="gap-1 pr-1">
                                         {f}
-                                        <button type="button" onClick={() => set('features', form.features.filter((x) => x !== f))} aria-label={`Remove ${f}`} className="rounded p-0.5 hover:bg-muted">
+                                        <button type="button" onClick={() => set('features', form.features.filter((x) => x !== f))} aria-label={`Remove ${f}`} className="rounded-md p-0.5 hover:bg-muted">
                                             <X className="h-3 w-3" />
                                         </button>
                                     </Badge>

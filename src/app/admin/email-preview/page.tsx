@@ -10,7 +10,7 @@ const SAMPLE_DATA = {
     phone: '+1 (555) 123-4567',
     helpType: 'Property Management',
     message:
-        'Hi, I own a 3-bedroom property in downtown Austin and I\'m looking for a reliable management company to handle tenant screening, rent collection, and maintenance coordination.\n\nCould you provide more details about your management packages and pricing?',
+        'Hi, I own a 10 Marla house in DHA Phase 6, Lahore and I\'m looking for a reliable management company to handle tenant screening, rent collection, and maintenance coordination.\n\nCould you provide more details about your management packages and pricing?',
 };
 
 export default function EmailPreviewPage() {
@@ -49,7 +49,7 @@ export default function EmailPreviewPage() {
                 <iframe
                     srcDoc={html}
                     title="Email Preview"
-                    className="w-full bg-white rounded-lg"
+                    className="w-full bg-white rounded-md"
                     style={{ height: '800px', border: 'none' }}
                 />
             </div>

@@ -12,7 +12,7 @@ import {
     ChevronLeft,
     Menu,
     ExternalLink,
-} from 'lucide-react';
+} from '@/components/admin/icons';
 import { cn } from '@/lib/utils';
 import { useAdminStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ interface SidebarProps {
 const navItems = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { label: 'Properties', href: '/admin/properties', icon: Building },
-    { label: 'Viewings', href: '/admin/viewings', icon: CalendarClock, badgeKey: 'viewings' as const },
+    { label: 'Appointments', href: '/admin/viewings', icon: CalendarClock, badgeKey: 'viewings' as const },
     { label: 'Inquiries', href: '/admin/leads', icon: MessageSquare, badgeKey: 'leads' as const },
 ];
 
@@ -54,7 +54,7 @@ export function Sidebar({ leadsBadge = 0, viewingsBadge = 0 }: SidebarProps) {
             {/* Sidebar */}
             <aside
                 className={cn(
-                    'fixed top-0 left-0 z-50 h-full w-64 bg-card border-r border-border transition-transform duration-300 flex flex-col',
+                    'admin-sidebar fixed top-0 left-0 z-50 h-full w-64 bg-card border-r border-border transition-transform duration-300 flex flex-col',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
                 )}
             >

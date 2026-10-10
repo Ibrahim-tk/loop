@@ -1,14 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import { usePrefs } from '@/lib/store';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bed, Bathtub, SquaresFour } from '@phosphor-icons/react';
+import { Bed, Bathtub, CaretRight, SquaresFour } from '@phosphor-icons/react';
 import { ImageIcon } from 'lucide-react';
 import { Property } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
-import { FavouriteButton, CompareButton } from './SaveCompareButtons';
-import { formatArea, formatListingPrice, getListingBadge, PROPERTY_TYPE_LABELS } from '@/lib/properties';
+import { FavouriteButton } from './SaveCompareButtons';
+import { formatArea, formatListingPrice, getListingBadge } from '@/lib/properties';
+
+/** Ghost chevron: the whole card is the link; this just signals it, and turns brand green on hover. */
+function ViewChevron() {
+    return (
+        <CaretRight
+            aria-hidden="true"
+            size={20}
+            weight="bold"
+            className="shrink-0 text-[color:var(--on-surface-default)] transition-[color,transform] duration-300 group-hover:text-[color:var(--action-primary-hover)] group-hover:translate-x-0.5"
+        />
+    );
+}
 
 interface PropertyCardProps {
     property: Property;
@@ -17,12 +30,17 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property, viewMode = 'grid', isPopular = false }: PropertyCardProps) {
+    usePrefs(); // re-render when currency / area unit changes
     const [imageError, setImageError] = useState(false);
     const mainImage = property.property_images?.[0]?.storage_url;
     const hasValidImage = mainImage && !imageError;
 
     const badge = getListingBadge(property);
-    const displayTag = isPopular && (property.view_count || 0) > 0 ? '🔥 Popular' : property.featured && property.status === 'AVAILABLE' ? `★ Featured · ${badge}` : badge;
+    const isFeatured = property.featured && property.status === 'AVAILABLE';
+    const displayTag = isPopular && (property.view_count || 0) > 0 ? '🔥 Popular' : isFeatured ? `Featured · ${badge}` : badge;
+    const tagClass = isFeatured && !displayTag.includes('🔥')
+        ? 'pill-glass'
+        : `inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-normal text-white backdrop-blur-[12px] ${displayTag.includes('🔥') ? 'bg-orange-500/80 font-medium' : 'bg-[rgba(0,0,0,0.25)]'}`;
     const price = formatListingPrice(property);
 
     const handleClick = () => {
@@ -32,16 +50,16 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
 
     if (viewMode === 'list') {
         return (
-            <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group bg-white rounded-[8px] overflow-hidden flex flex-col sm:flex-row transition-shadow hover:shadow-[0_4px_12px_rgb(0,0,0,0.02)] block">
+            <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group bg-white rounded-[8px] overflow-hidden flex flex-row transition-shadow hover:shadow-[0_4px_12px_rgb(0,0,0,0.02)] block">
                 {/* Image — left side */}
-                <div className="relative w-full sm:w-[420px] h-[230px] shrink-0 overflow-hidden bg-gray-100">
+                <div className="relative w-[40%] sm:w-[420px] min-h-[150px] sm:h-[230px] shrink-0 overflow-hidden bg-gray-100">
                     {hasValidImage ? (
                         <Image
                             src={mainImage}
                             alt={property.title}
                             fill
                             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                            sizes="(max-width: 640px) 100vw, 420px"
+                            sizes="(max-width: 640px) 40vw, 420px"
                             onError={() => setImageError(true)}
                         />
                     ) : (
@@ -50,55 +68,52 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                             <span className="text-sm text-gray-400">No image</span>
                         </div>
                     )}
-                    {/* Save / compare */}
-                    <div className="absolute top-3 left-3 z-10 flex gap-2">
-                        <FavouriteButton propertyId={property.id} propertyTitle={property.title} />
-                        <CompareButton propertyId={property.id} propertyTitle={property.title} />
+                    {/* Tag — left */}
+                    <div className="absolute top-3 left-3 hidden sm:block">
+                        <span className={tagClass}>{displayTag}</span>
                     </div>
-                    {/* Tag Badge */}
-                    <div className="absolute top-3 right-3">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-[4px] text-sm font-normal text-white backdrop-blur-[12px] ${displayTag.includes('🔥') ? 'bg-orange-500/80 font-medium' : 'bg-[rgba(0,0,0,0.2)]'}`}>
-                            {displayTag}
-                        </span>
+                    {/* Save — right */}
+                    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
+                        <FavouriteButton propertyId={property.id} propertyTitle={property.title} />
                     </div>
                 </div>
 
                 {/* Content — right side */}
-                <div className="flex flex-col justify-between flex-1 p-3.5 sm:p-5">
-                    <div className="flex flex-col gap-3">
+                <div className="flex flex-col justify-between flex-1 min-w-0 gap-2 p-3 sm:p-5">
+                    <div className="flex flex-col gap-2 sm:gap-3">
                         {/* Title & Location */}
-                        <div className="flex flex-col gap-3">
-                            <h3 className="text-[20px] font-normal text-[color:var(--on-surface-default)] leading-normal line-clamp-1 transition-colors duration-300 group-hover:text-[var(--foundation-blue-blue-7)]">
+                        <div className="flex flex-col gap-1 sm:gap-3">
+                            <h3 className="text-[16px] sm:text-[20px] font-normal text-[color:var(--on-surface-default)] leading-snug line-clamp-1 transition-colors duration-300 group-hover:text-[var(--foundation-blue-blue-7)]">
                                 {property.title}
                             </h3>
-                            <p className="text-[16px] font-light text-[color:var(--on-surface-variant)] leading-6 line-clamp-1">
-                                {PROPERTY_TYPE_LABELS[property.property_type] ?? 'Property'} · {property.address}, {property.city}
+                            <p className="text-[13px] sm:text-[16px] font-light text-[color:var(--on-surface-variant)] leading-5 sm:leading-6 line-clamp-1">
+                                {property.city}
                             </p>
                         </div>
 
                         {/* Beds / Baths / Area — spread across full width */}
-                        <div className="flex items-center justify-between w-full text-[16px] font-light text-[color:var(--on-surface-variant)]">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:justify-between w-full text-[13px] sm:text-[16px] font-light text-[color:var(--on-surface-variant)]">
                             <span className="flex items-center gap-1.5">
-                                <Bed size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                                <Bed size={18} weight="light" className="text-[color:var(--on-surface-variant)]" />
                                 {property.bedrooms} beds
                             </span>
-                            <span className="text-[var(--outline-default)]">|</span>
+                            <span className="hidden sm:inline text-[var(--outline-default)]">|</span>
                             <span className="flex items-center gap-1.5">
-                                <Bathtub size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                                <Bathtub size={18} weight="light" className="text-[color:var(--on-surface-variant)]" />
                                 {property.bathrooms} baths
                             </span>
-                            <span className="text-[var(--outline-default)]">|</span>
+                            <span className="hidden sm:inline text-[var(--outline-default)]">|</span>
                             <span className="flex items-center gap-1.5">
-                                <SquaresFour size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                                <SquaresFour size={18} weight="light" className="text-[color:var(--on-surface-variant)]" />
                                 {formatArea(property.sqft)}
                             </span>
                         </div>
                     </div>
 
-                    {/* Price + View Details */}
+                    {/* Price + go-to-details chevron */}
                     <div className="flex items-center justify-between mt-auto">
                         <div className="flex items-baseline gap-1">
-                            <span className="text-[24px] font-normal text-[color:var(--on-surface-default)] leading-8">
+                            <span className="text-[18px] sm:text-[24px] font-normal text-[color:var(--on-surface-default)] leading-7 sm:leading-8">
                                 {price.amount}
                             </span>
                             {price.suffix && (
@@ -107,11 +122,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                                 </span>
                             )}
                         </div>
-                        <span
-                            className="text-[14px] font-medium underline text-[color:var(--on-surface-variant)] transition-colors duration-300 group-hover:text-[color:var(--on-surface-primary)]"
-                        >
-                            View Details
-                        </span>
+                        <ViewChevron />
                     </div>
                 </div>
             </Link>
@@ -120,8 +131,8 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
 
     // Grid view (default)
     return (
-        <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group bg-white rounded-[8px] overflow-hidden flex flex-col h-full hover:shadow-[0_4px_12px_rgb(0,0,0,0.06)] transition-shadow block">
-            {/* Image */}
+        <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group flex flex-col h-full rounded-[8px] overflow-hidden bg-[var(--bg-block)]">
+            {/* Image — full bleed */}
             <div className="relative h-[220px] sm:h-[250px] lg:h-[274px] overflow-hidden bg-gray-100 shrink-0">
                 {hasValidImage ? (
                     <Image
@@ -138,21 +149,18 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                         <span className="text-sm text-gray-400">No image</span>
                     </div>
                 )}
-                {/* Save / compare */}
-                <div className="absolute top-3 left-3 z-10 flex gap-2">
-                    <FavouriteButton propertyId={property.id} propertyTitle={property.title} />
-                    <CompareButton propertyId={property.id} propertyTitle={property.title} />
+                {/* Tag — left */}
+                <div className="absolute top-3 left-3">
+                    <span className={tagClass}>{displayTag}</span>
                 </div>
-                {/* Tag Badge */}
-                <div className="absolute top-3 right-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-[4px] text-sm font-normal text-white backdrop-blur-[12px] ${displayTag.includes('🔥') ? 'bg-orange-500/80 font-medium' : 'bg-[rgba(0,0,0,0.2)]'}`}>
-                        {displayTag}
-                    </span>
+                {/* Save — right */}
+                <div className="absolute top-3 right-3 z-10">
+                    <FavouriteButton propertyId={property.id} propertyTitle={property.title} />
                 </div>
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-4 sm:gap-5 p-3.5 sm:p-5 flex-1">
+            <div className="flex flex-col gap-5 p-5 flex-1">
                 {/* Title & Location */}
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
@@ -160,7 +168,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                             {property.title}
                         </h3>
                         <p className="text-[16px] font-light text-[color:var(--on-surface-variant)] leading-6 line-clamp-1">
-                            {PROPERTY_TYPE_LABELS[property.property_type] ?? 'Property'} · {property.address}, {property.city}
+                            {property.city}
                         </p>
                     </div>
 
@@ -186,7 +194,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                 {/* Divider */}
                 <div className="h-px bg-[var(--outline-default)]" />
 
-                {/* Price + View Details */}
+                {/* Price + go-to-details chevron */}
                 <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-baseline gap-1">
                         <span className="text-[24px] font-normal text-[color:var(--on-surface-default)] leading-8">
@@ -198,11 +206,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                             </span>
                         )}
                     </div>
-                        <span
-                            className="text-[14px] font-medium underline text-[color:var(--on-surface-variant)] transition-colors duration-300 group-hover:text-[color:var(--on-surface-primary)]"
-                        >
-                            View Details
-                        </span>
+                    <ViewChevron />
                 </div>
             </div>
         </Link>

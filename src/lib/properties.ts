@@ -1,5 +1,5 @@
 import type { Furnishing, ListingType, Property, PropertyStatus, PropertyType } from '@/lib/types';
-import { formatPrice } from '@/lib/utils';
+import { formatAreaUnit, formatPrice } from '@/lib/utils';
 
 /* ─────────────────────────────────────────────
    Labels
@@ -41,14 +41,14 @@ export const STATUS_LABELS: Partial<Record<PropertyStatus, string>> = {
 export const AMENITY_OPTIONS = [
     'Pool', 'Gym', 'Garden', 'Garage', 'Balcony', 'Fireplace', 'Security', 'Concierge',
     'Elevator', 'Laundry', 'Pet Friendly', 'Smart Home', 'Solar Panels', 'Home Office',
-    'Home Theater', 'Rooftop Terrace', 'Spa',
+    'Home Theater', 'Rooftop Terrace', 'Spa', 'Servant Quarter', 'Backup Generator',
 ];
 
 /* ─────────────────────────────────────────────
    Display helpers
    ───────────────────────────────────────────── */
 
-/** "$3,200 /month" for rentals, "$1,295,000" for sales. */
+/** "PKR 3.5 Lakh /month" for rentals, "PKR 9.5 Crore" for sales. */
 export function formatListingPrice(property: Pick<Property, 'rent_price' | 'listing_type'>) {
     return {
         amount: formatPrice(property.rent_price || 0),
@@ -68,7 +68,7 @@ export function getListingBadge(property: Pick<Property, 'status' | 'listing_typ
 }
 
 export function formatArea(sqft: number) {
-    return `${(sqft || 0).toLocaleString()} sq ft`;
+    return formatAreaUnit(sqft || 0);
 }
 
 /* ─────────────────────────────────────────────

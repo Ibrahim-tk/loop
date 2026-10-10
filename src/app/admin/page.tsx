@@ -2,21 +2,21 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Building, CalendarClock, CheckCircle2, Home, MessageSquare, Plus, Star, type LucideIcon } from 'lucide-react';
+import { Building, CalendarClock, Eye, Plus, Star, type LucideIcon } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Icon3D from '@/components/ui/Icon3D';
 import { OverviewCharts, AnalyticsCharts } from '@/components/admin/DashboardCharts';
 import { formatListingPrice, LISTING_TYPE_LABELS } from '@/lib/properties';
 import { formatSlot, formatViewingDate, toDateKey } from '@/lib/viewings';
-import type { ListingType, PropertyStatus } from '@/lib/types';
+import type { ListingType } from '@/lib/types';
 
 interface PropertyRow {
     id: string;
     title: string;
     city: string;
-    status: PropertyStatus;
     featured: boolean;
     listing_type: ListingType;
     rent_price: number;
@@ -59,35 +59,35 @@ const timeAgo = (iso: string) => {
 
 function StatCard({ title, value, hint, icon: Icon, href, loading }: { title: string; value: number; hint: string; icon: LucideIcon; href: string; loading: boolean }) {
     return (
-        <Link href={href} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
+        <Link href={href} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
             <Card className="hover:bg-muted/50 transition-colors h-full">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+                    <Icon className="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{loading ? '—' : value}</div>
-                    <p className="text-xs text-muted-foreground">{hint}</p>
+                    <div className="text-4xl font-semibold tracking-tight">{loading ? '—' : value}</div>
+                    <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
                 </CardContent>
             </Card>
         </Link>
     );
 }
 
-function ListCard({ title, href, linkLabel, empty, loading, children }: { title: string; href: string; linkLabel: string; empty: string; loading: boolean; children: React.ReactNode[] }) {
+function ListCard({ title, href, linkLabel, empty, loading, children }: { title: string; href: string; linkLabel: string; empty: React.ReactNode; loading: boolean; children: React.ReactNode[] }) {
     return (
         <Card className="flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-base">{title}</CardTitle>
                 <Link href={href} className="text-xs text-muted-foreground hover:text-foreground underline">{linkLabel}</Link>
             </CardHeader>
-            <CardContent className="flex-1">
+            <CardContent className="flex-1 flex flex-col">
                 {loading ? (
                     <div className="space-y-3" aria-busy="true">
-                        {[0, 1, 2].map((i) => <div key={i} className="h-10 rounded bg-muted animate-pulse" />)}
+                        {[0, 1, 2].map((i) => <div key={i} className="h-10 rounded-md bg-muted animate-pulse" />)}
                     </div>
                 ) : children.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-6 text-center">{empty}</p>
+                    typeof empty === 'string' ? <p className="text-sm text-muted-foreground py-6 text-center">{empty}</p> : empty
                 ) : (
                     <ul className="divide-y">{children}</ul>
                 )}
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
         const today = toDateKey(new Date());
 
         const [props, leads, leadCount, viewings, pendingCount, leadDates] = await Promise.all([
-            supabase.from('properties').select('id, title, city, status, featured, listing_type, rent_price, view_count, click_count, created_at').order('created_at', { ascending: false }),
+            supabase.from('properties').select('id, title, city, featured, listing_type, rent_price, view_count, click_count, created_at').order('created_at', { ascending: false }),
             supabase.from('leads').select('id, name, message, created_at, property:properties(id, title)').order('created_at', { ascending: false }).limit(5),
             supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', startOfMonth),
             supabase.from('viewings').select('id, name, viewing_date, time_slot, status, property:properties(id, title)').gte('viewing_date', today).neq('status', 'CANCELLED').order('viewing_date').order('time_slot').limit(5),
@@ -136,26 +136,22 @@ export default function AdminDashboard() {
     const loading = !data && !error;
     const props = data?.properties ?? [];
     const count = (fn: (p: PropertyRow) => boolean) => props.filter(fn).length;
-    const sold = count((p) => p.status === 'SOLD');
-    const rented = count((p) => p.status === 'RENTED');
+    
+    const statusChart = [
+        { name: 'For sale', value: count((p) => p.listing_type === 'SALE') },
+        { name: 'For rent', value: count((p) => p.listing_type === 'RENT') },
+    ].filter((d) => d.value > 0);
 
-    const statusChart = Object.entries(
-        props.reduce<Record<string, number>>((acc, p) => ({ ...acc, [p.status]: (acc[p.status] ?? 0) + 1 }), {})
-    ).map(([name, value]) => ({ name: name.replace(/_/g, ' '), value }));
-
-    const leadsByMonth = Object.entries(
-        (data?.leadDates ?? []).reduce<Record<string, number>>((acc, iso) => {
-            const d = new Date(iso);
-            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            return { ...acc, [key]: (acc[key] ?? 0) + 1 };
-        }, {})
-    )
-        .sort(([a], [b]) => a.localeCompare(b))
-        .slice(-6)
-        .map(([key, c]) => {
-            const [y, m] = key.split('-');
-            return { month: new Date(+y, +m - 1).toLocaleString('en-US', { month: 'short' }), count: c };
-        });
+    // Last 6 calendar months, zero-filled so the trend line is continuous.
+    const leadCounts = (data?.leadDates ?? []).reduce<Record<string, number>>((acc, iso) => {
+        const d = new Date(iso);
+        const key = `${d.getFullYear()}-${d.getMonth()}`;
+        return { ...acc, [key]: (acc[key] ?? 0) + 1 };
+    }, {});
+    const leadsByMonth = Array.from({ length: 6 }, (_, i) => {
+        const d = new Date(new Date().getFullYear(), new Date().getMonth() - 5 + i, 1);
+        return { month: d.toLocaleString('en-US', { month: 'short' }), count: leadCounts[`${d.getFullYear()}-${d.getMonth()}`] ?? 0 };
+    });
 
     const viewsByProperty = [...props]
         .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
@@ -188,13 +184,11 @@ export default function AdminDashboard() {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
-                    <div className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                    <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
                         <StatCard title="Total properties" value={props.length} hint={`${count((p) => p.listing_type === 'SALE')} for sale · ${count((p) => p.listing_type === 'RENT')} for rent`} icon={Building} href="/admin/properties" loading={loading} />
-                        <StatCard title="Available" value={count((p) => p.status === 'AVAILABLE')} hint="On the market now" icon={Home} href="/admin/properties" loading={loading} />
-                        <StatCard title="Sold / rented" value={sold + rented} hint={`${sold} sold · ${rented} rented`} icon={CheckCircle2} href="/admin/properties" loading={loading} />
+                        <StatCard title="Total views" value={props.reduce((n, p) => n + (p.view_count || 0), 0)} hint="Across all listings" icon={Eye} href="/admin/properties" loading={loading} />
                         <StatCard title="Featured" value={count((p) => p.featured)} hint="Shown first on the site" icon={Star} href="/admin/properties" loading={loading} />
                         <StatCard title="Viewings to confirm" value={data?.pendingViewings ?? 0} hint="Upcoming, still pending" icon={CalendarClock} href="/admin/viewings" loading={loading} />
-                        <StatCard title="Inquiries" value={data?.leadsThisMonth ?? 0} hint="This month" icon={MessageSquare} href="/admin/leads" loading={loading} />
                     </div>
 
                     <div className="grid gap-4 lg:grid-cols-3">
@@ -202,7 +196,7 @@ export default function AdminDashboard() {
                             {props.slice(0, 5).map((p) => {
                                 const price = formatListingPrice(p);
                                 return (
-                                    <li key={p.id} className="py-2.5 flex items-center justify-between gap-3">
+                                    <li key={p.id} className="py-3 flex items-center justify-between gap-3">
                                         <div className="min-w-0">
                                             <Link href={`/admin/properties/${p.id}/edit`} className="block text-sm font-medium truncate hover:underline">{p.title}</Link>
                                             <p className="text-xs text-muted-foreground">{LISTING_TYPE_LABELS[p.listing_type]} · {p.city} · {timeAgo(p.created_at)}</p>
@@ -215,7 +209,7 @@ export default function AdminDashboard() {
 
                         <ListCard title="Recent inquiries" href="/admin/leads" linkLabel="All inquiries" empty="No inquiries yet." loading={loading}>
                             {(data?.recentLeads ?? []).map((l) => (
-                                <li key={l.id} className="py-2.5">
+                                <li key={l.id} className="py-3">
                                     <div className="flex items-center justify-between gap-3">
                                         <span className="text-sm font-medium truncate">{l.name}</span>
                                         <span className="text-xs text-muted-foreground whitespace-nowrap">{timeAgo(l.created_at)}</span>
@@ -225,9 +219,9 @@ export default function AdminDashboard() {
                             ))}
                         </ListCard>
 
-                        <ListCard title="Upcoming viewings" href="/admin/viewings" linkLabel="All viewings" empty="No upcoming viewings." loading={loading}>
+                        <ListCard title="Upcoming viewings" href="/admin/viewings" linkLabel="All viewings" empty={<div className="flex flex-1 flex-col items-center justify-center gap-3 py-8 text-center"><Icon3D name="calendar" size={88} /><p className="text-sm text-muted-foreground">No upcoming viewings.</p></div>} loading={loading}>
                             {(data?.upcomingViewings ?? []).map((v) => (
-                                <li key={v.id} className="py-2.5 flex items-center justify-between gap-3">
+                                <li key={v.id} className="py-3 flex items-center justify-between gap-3">
                                     <div className="min-w-0">
                                         <p className="text-sm font-medium truncate">{v.property?.title ?? 'Deleted property'}</p>
                                         <p className="text-xs text-muted-foreground">{formatViewingDate(v.viewing_date, 'short')} · {formatSlot(v.time_slot)} · {v.name}</p>

@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import Icon3D from '@/components/ui/Icon3D';
+import { usePrefs } from '@/lib/store';
 import Link from 'next/link';
 import { CaretRight, Check, Info, Minus, Scales, WarningCircle, X } from '@phosphor-icons/react';
 import { usePropertiesByIds } from '@/hooks/usePropertiesByIds';
@@ -13,7 +15,7 @@ import {
     PROPERTY_TYPE_LABELS,
     STATUS_LABELS,
 } from '@/lib/properties';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, SQFT_PER_MARLA } from '@/lib/utils';
 import type { Property } from '@/lib/types';
 
 interface Row {
@@ -39,8 +41,8 @@ const ROWS: Row[] = [
         sameListingOnly: true,
     },
     {
-        label: 'Price per sq ft',
-        render: (p) => (p.sqft ? formatPrice(Math.round(p.rent_price / p.sqft)) : '—'),
+        label: 'Price per Marla',
+        render: (p) => (p.sqft ? formatPrice(Math.round((p.rent_price / p.sqft) * SQFT_PER_MARLA)) : '—'),
         score: (p) => (p.sqft ? p.rent_price / p.sqft : Infinity),
         best: 'min',
         sameListingOnly: true,
@@ -71,6 +73,7 @@ const cellBase = 'px-4 py-3 align-top border-b border-[var(--outline-default)] t
 const labelCell = `${cellBase} sticky left-0 z-10 bg-[var(--bg-gray-block)] text-[color:var(--text-secondary)] font-medium w-[120px] min-w-[120px] sm:w-[180px] sm:min-w-[180px]`;
 
 export default function CompareClient() {
+    usePrefs(); // re-render when currency / area unit changes
     const hydrated = useSavedHydrated();
     const compare = useSavedProperties((s) => s.compare);
     const removeCompare = useSavedProperties((s) => s.removeCompare);
@@ -82,8 +85,8 @@ export default function CompareClient() {
 
     return (
         <section className="bg-[var(--surface-variant)] min-h-screen pt-[var(--header-height)]">
-            <div className="px-5 sm:px-8 lg:px-16 py-4 sm:py-6 lg:py-8 max-w-[1440px] mx-auto">
-                <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 flex items-center gap-2 text-[length:var(--typeface-paragraph-text)]">
+            <div className="px-5 sm:px-8 lg:px-16 pt-6 sm:pt-8 lg:pt-10 pb-[var(--section-y)] max-w-[1440px] mx-auto">
+                <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 flex items-center gap-2 text-[length:var(--typeface-paragraph-text)]">
                     <Link href="/" className="hover:underline">Home</Link>
                     <CaretRight size={16} className="opacity-60" />
                     <Link href="/rentals" className="hover:underline">Properties</Link>
@@ -116,14 +119,14 @@ export default function CompareClient() {
                 {isLoading ? (
                     <div className="h-[480px] rounded-[var(--radius-md)] bg-[var(--surface-default)] animate-pulse" aria-busy="true" aria-label="Loading comparison" />
                 ) : error ? (
-                    <div role="alert" className="flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
-                        <WarningCircle size={40} className="text-[color:var(--text-danger)]" />
+                    <div role="alert" className="blur-rise flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
+                        <Icon3D name="warning" size={96} className="mb-2" />
                         <p className="text-[length:var(--typeface-heading-subheading)]">We couldn&apos;t load the comparison.</p>
                         <button type="button" onClick={() => window.location.reload()} className="btn-primary mt-2">Try again</button>
                     </div>
                 ) : properties.length < 2 ? (
-                    <div className="flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
-                        <Scales size={40} className="text-[color:var(--text-tertiary)]" />
+                    <div className="blur-rise flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
+                        <Icon3D name="scales" size={104} className="mb-2" />
                         <h2 className="text-[length:var(--typeface-heading-h3)]">
                             {properties.length === 0 ? 'Nothing to compare yet' : 'Add one more property'}
                         </h2>

@@ -1,4 +1,5 @@
 import { MagnifyingGlass } from '@phosphor-icons/react';
+import Icon3D from '@/components/ui/Icon3D';
 import { Property } from '@/lib/types';
 import PropertyCard from './PropertyCard';
 
@@ -14,8 +15,8 @@ interface PropertyGridProps {
 export default function PropertyGrid({ properties, viewMode = 'grid', hasFilters = false, onClearFilters }: PropertyGridProps) {
     if (properties.length === 0) {
         return (
-            <div className="mt-8 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
-                <MagnifyingGlass size={40} className="text-[color:var(--text-tertiary)]" />
+            <div className="blur-rise mt-8 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
+                <Icon3D name="search" size={104} className="mb-2" />
                 <h2 className="text-[length:var(--typeface-heading-h3)]">
                     {hasFilters ? 'No properties match your filters' : 'No properties listed yet'}
                 </h2>
@@ -34,7 +35,7 @@ export default function PropertyGrid({ properties, viewMode = 'grid', hasFilters
     }
 
     return (
-        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-4' : 'flex flex-col gap-5 pt-4'}>
+        <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-x-[var(--grid-col-gap)] gap-y-[var(--grid-row-gap)] pt-8' : 'flex flex-col gap-5 pt-4'}>
             {properties.map((property) => (
                 <PropertyCard key={property.id} property={property} viewMode={viewMode} />
             ))}

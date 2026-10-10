@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Icon3D from '@/components/ui/Icon3D';
 import { CaretRight, Heart, Info, WarningCircle } from '@phosphor-icons/react';
 import PropertyGrid from '@/components/listings/PropertyGrid';
 import { usePropertiesByIds } from '@/hooks/usePropertiesByIds';
@@ -16,8 +17,8 @@ export default function FavouritesClient() {
 
     return (
         <section className="bg-[var(--surface-variant)] min-h-screen pt-[var(--header-height)]">
-            <div className="px-5 sm:px-8 lg:px-16 py-4 sm:py-6 lg:py-8 max-w-[1440px] mx-auto">
-                <nav aria-label="Breadcrumb" className="mb-4 sm:mb-6 flex items-center gap-2 text-[length:var(--typeface-paragraph-text)]">
+            <div className="px-5 sm:px-8 lg:px-16 pt-6 sm:pt-8 lg:pt-10 pb-[var(--section-y)] max-w-[1440px] mx-auto">
+                <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 flex items-center gap-2 text-[length:var(--typeface-paragraph-text)]">
                     <Link href="/" className="hover:underline">Home</Link>
                     <CaretRight size={16} className="opacity-60" />
                     <span className="opacity-60">Saved</span>
@@ -51,7 +52,7 @@ export default function FavouritesClient() {
                 )}
 
                 {isLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-4" aria-busy="true" aria-label="Loading saved properties">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[var(--grid-col-gap)] gap-y-[var(--grid-row-gap)] pt-8" aria-busy="true" aria-label="Loading saved properties">
                         {Array.from({ length: Math.min(Math.max(favourites.length, 3), 6) }).map((_, i) => (
                             <div key={i} className="bg-[var(--surface-default)] rounded-[var(--radius-md)] overflow-hidden animate-pulse">
                                 <div className="h-[274px] bg-[var(--surface-container-highest)]" />
@@ -63,14 +64,14 @@ export default function FavouritesClient() {
                         ))}
                     </div>
                 ) : error ? (
-                    <div role="alert" className="mt-4 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
-                        <WarningCircle size={40} className="text-[color:var(--text-danger)]" />
+                    <div role="alert" className="blur-rise mt-4 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
+                        <Icon3D name="warning" size={96} className="mb-2" />
                         <p className="text-[length:var(--typeface-heading-subheading)]">We couldn&apos;t load your saved properties.</p>
                         <button type="button" onClick={() => window.location.reload()} className="btn-primary mt-2">Try again</button>
                     </div>
                 ) : properties.length === 0 ? (
-                    <div className="mt-4 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
-                        <Heart size={40} className="text-[color:var(--text-tertiary)]" />
+                    <div className="blur-rise mt-4 flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
+                        <Icon3D name="heart" size={104} className="mb-2" />
                         <h2 className="text-[length:var(--typeface-heading-h3)]">No saved properties yet</h2>
                         <p className="max-w-[420px] text-[color:var(--text-secondary)]">
                             Tap the heart on any property to keep it here and come back to it later.

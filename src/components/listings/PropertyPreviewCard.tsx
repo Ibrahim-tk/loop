@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePrefs } from '@/lib/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, BedDouble, Bath, ArrowRight, ImageIcon } from 'lucide-react';
@@ -14,6 +15,7 @@ interface PropertyPreviewCardProps {
 }
 
 export default function PropertyPreviewCard({ property, compact = false }: PropertyPreviewCardProps) {
+    usePrefs(); // re-render when currency / area unit changes
     const [imageError, setImageError] = useState(false);
     const mainImage = property.property_images?.[0]?.storage_url;
     const hasValidImage = mainImage && !imageError;

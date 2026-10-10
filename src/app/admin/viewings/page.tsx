@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { CalendarClock, Check, CheckCheck, Loader2, Mail, Phone, Search, X } from 'lucide-react';
+import { CalendarClock, Check, CheckCheck, Loader2, Mail, Phone, Search, X } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { updateViewingStatus } from '@/lib/actions/viewings';
 import { formatSlot, formatViewingDate, toDateKey } from '@/lib/viewings';
@@ -83,7 +83,7 @@ export default function AdminViewingsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold tracking-tight">Viewings</h1>
+                <h1 className="text-2xl font-bold tracking-tight">Appointments</h1>
                 <p className="text-muted-foreground text-sm">
                     {loading ? 'Loading…' : `${pendingCount} upcoming ${pendingCount === 1 ? 'request needs' : 'requests need'} confirming`}
                 </p>
@@ -93,7 +93,7 @@ export default function AdminViewingsPage() {
                 <div className="inline-flex rounded-md border p-0.5" role="radiogroup" aria-label="Date range">
                     {(['upcoming', 'past', 'all'] as const).map((w) => (
                         <button key={w} type="button" role="radio" aria-checked={when === w} onClick={() => setWhen(w)}
-                            className={`px-3 h-8 rounded text-sm capitalize ${when === w ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                            className={`px-3 h-8 rounded-md text-sm capitalize ${when === w ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                             {w}
                         </button>
                     ))}

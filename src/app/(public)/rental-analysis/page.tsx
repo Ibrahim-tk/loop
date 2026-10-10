@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Icon3D from '@/components/ui/Icon3D';
 import Image from 'next/image';
 import { Check } from '@phosphor-icons/react';
 import { submitLead } from '@/lib/actions/leads';
@@ -116,10 +117,8 @@ export default function RentalAnalysisPage() {
                     <div className="flex-1 bg-white p-6 sm:p-8 lg:p-12">
                         {submitted ? (
                             /* ── Success State ───────────────────────── */
-                            <div className="flex flex-col items-center justify-center py-12 gap-6">
-                                <div className="w-16 h-16 rounded-full bg-[rgba(21,128,61,0.1)] flex items-center justify-center">
-                                    <Check size={32} weight="bold" className="text-[var(--feedback-success)]" />
-                                </div>
+                            <div className="blur-rise flex flex-col items-center justify-center py-12 gap-6">
+                                <Icon3D name="check" size={104} />
                                 <h3 className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)]">
                                     Request Submitted!
                                 </h3>

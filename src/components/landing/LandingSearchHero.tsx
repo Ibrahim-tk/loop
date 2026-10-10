@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePrefs } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import HeroVideo from '@/components/landing/HeroVideo';
@@ -10,8 +11,8 @@ import { formatPrice } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 const PRICE_STEPS: Record<ListingType, number[]> = {
-    RENT: [1000, 1500, 2000, 3000, 5000],
-    SALE: [200000, 300000, 500000, 750000, 1000000],
+    RENT: [75000, 150000, 250000, 400000, 650000],
+    SALE: [20000000, 50000000, 100000000, 200000000, 350000000],
 };
 
 const fieldClass =
@@ -23,6 +24,7 @@ interface LandingSearchHeroProps {
 }
 
 export default function LandingSearchHero({ cities, types }: LandingSearchHeroProps) {
+    usePrefs(); // re-render when currency / area unit changes
     const router = useRouter();
     const [listing, setListing] = useState<ListingType>('RENT');
     const [city, setCity] = useState('');
@@ -42,18 +44,16 @@ export default function LandingSearchHero({ cities, types }: LandingSearchHeroPr
     };
 
     return (
-        <section className="relative w-full min-h-[640px] h-[85dvh] overflow-hidden">
+        <section className="relative w-full min-h-[512px] h-[68dvh] overflow-hidden">
             <HeroVideo />
 
-            <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 lg:px-16 pt-[80px]">
-                <h1 className="text-white text-[length:var(--typeface-display-base)] font-normal leading-none tracking-[-0.8px] max-w-[800px]">
+            <div className="relative z-10 h-full px-5 sm:px-8 lg:px-16 pt-[80px]">
+                <div className="mx-auto w-full max-w-[var(--content-max)] h-full flex flex-col items-center justify-center text-center">
+                <h1 className="text-white text-[length:var(--typeface-display-base)] font-normal leading-none tracking-[-0.8px] max-w-[900px]">
                     Find your next home
                 </h1>
-                <p className="mt-4 text-white/90 font-light text-[length:var(--typeface-heading-subheading)] leading-7">
-                    Search, save your favourites and book a viewing in minutes.
-                </p>
 
-                <form onSubmit={onSubmit} className="mt-8 w-full max-w-[1040px] bg-white rounded-[8px] p-4 sm:p-5 shadow-[0_10px_40px_rgba(0,0,0,0.12)]">
+                <form onSubmit={onSubmit} className="mt-8 w-full max-w-[1040px] text-left bg-white rounded-[8px] p-4 sm:p-5 shadow-[0_10px_40px_rgba(0,0,0,0.12)]">
                     <div role="radiogroup" aria-label="Buy or rent" className="inline-flex p-1 mb-4 rounded-[6px] bg-[var(--surface-variant)]">
                         {(['RENT', 'SALE'] as const).map((value) => (
                             <button
@@ -100,6 +100,7 @@ export default function LandingSearchHero({ cities, types }: LandingSearchHeroPr
                         </button>
                     </div>
                 </form>
+                </div>
             </div>
         </section>
     );

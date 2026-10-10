@@ -11,8 +11,8 @@ interface AdminThemeContextType {
 }
 
 const AdminThemeContext = createContext<AdminThemeContextType>({
-    theme: 'system',
-    resolvedTheme: 'dark',
+    theme: 'light',
+    resolvedTheme: 'light',
     setTheme: () => { },
 });
 
@@ -26,8 +26,8 @@ function getSystemTheme(): 'light' | 'dark' {
 }
 
 export function AdminThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setThemeState] = useState<Theme>('system');
-    const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
+    const [theme, setThemeState] = useState<Theme>('light');
+    const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
     // Load saved theme on mount
     useEffect(() => {

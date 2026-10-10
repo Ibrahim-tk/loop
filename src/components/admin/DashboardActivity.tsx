@@ -33,7 +33,7 @@ export function DashboardActivity({ recentLeads, leadsThisMonth, loading }: Dash
                 <CardDescription>{leadsThisMonth > 0 ? `${leadsThisMonth} new this month` : 'Latest inquiries'}</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="space-y-5">
+                <div className="space-y-6">
                     {recentLeads.map((lead) => (
                         <div key={lead.id} className="flex items-center gap-4">
                             <Avatar className="h-9 w-9">

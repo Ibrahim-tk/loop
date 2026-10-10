@@ -9,7 +9,7 @@ import {
     DollarSign,
     TrendingUp,
     Home,
-} from 'lucide-react';
+} from '@/components/admin/icons';
 import {
     Card,
     CardContent,
@@ -72,7 +72,7 @@ export function OverviewStatsCards({ stats, loading }: DashboardStatsCardsProps)
                     <CardContent>
                         <div className="text-2xl font-bold">{loading ? '—' : stats.leadsThisMonth}</div>
                         <div className="flex items-center gap-2 mt-1">
-                            <span className="inline-flex items-center rounded-sm bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                            <span className="inline-flex items-center rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                                 This Month
                             </span>
                             <p className="text-xs text-muted-foreground">{stats.totalLeads} total</p>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Toaster } from 'react-hot-toast';
+import { CheckCircle, WarningCircle } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
 export function AppToaster() {
@@ -43,31 +44,25 @@ export function AppToaster() {
     return (
         <div className={`admin-theme ${theme === 'dark' ? 'dark' : ''}`}>
             <Toaster
-                position="bottom-right"
+                position="bottom-center"
                 toastOptions={{
                     duration: 4000,
+                    // Soft grey frosted toast, same on every page and theme
                     style: {
-                        background: 'hsl(var(--background))',
-                        color: 'hsl(var(--foreground))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: 'var(--radius-md)',
-                        padding: '14px 20px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        background: 'rgb(233 233 233 / 0.92)',
+                        color: 'var(--color-black, #0a0d12)',
+                        border: '1px solid rgb(255 255 255 / 0.7)',
+                        borderRadius: '12px',
+                        padding: '12px 20px 12px 14px',
+                        boxShadow: '0 8px 28px rgba(10, 13, 18, 0.12)',
+                        backdropFilter: 'blur(16px) saturate(1.4)',
+                        WebkitBackdropFilter: 'blur(16px) saturate(1.4)',
                         fontSize: '14px',
                         fontWeight: '500',
                     },
-                    success: {
-                        iconTheme: {
-                            primary: 'hsl(var(--primary))',
-                            secondary: 'hsl(var(--primary-foreground))',
-                        },
-                    },
-                    error: {
-                        iconTheme: {
-                            primary: 'hsl(var(--destructive))',
-                            secondary: 'hsl(var(--destructive-foreground))',
-                        },
-                    },
+                    // Large icons: accent green for success, danger red for errors
+                    success: { icon: <CheckCircle size={32} weight="fill" color="var(--color-green-500)" className="shrink-0" /> },
+                    error: { icon: <WarningCircle size={32} weight="fill" color="var(--text-danger)" className="shrink-0" /> },
                 }}
             />
         </div>

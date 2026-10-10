@@ -58,13 +58,19 @@ export function OverviewCharts({ leadsByMonth, propertyStatusData }: OverviewCha
                 <CardContent className="h-[280px]">
                     {leadsByMonth.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={leadsByMonth} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted-foreground))" strokeOpacity={0.15} />
-                                <XAxis dataKey="month" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} />
-                                <YAxis allowDecimals={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} />
-                                <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={false} />
-                                <Bar dataKey="count" name="Leads" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} maxBarSize={32} />
-                            </BarChart>
+                            <AreaChart data={leadsByMonth} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="leadsFill" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.28} />
+                                        <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
+                                <XAxis dataKey="month" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} dy={8} />
+                                <YAxis allowDecimals={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} axisLine={false} tickLine={false} width={40} />
+                                <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={{ stroke: 'hsl(var(--border))' }} />
+                                <Area type="monotone" dataKey="count" name="Inquiries" stroke="hsl(var(--chart-1))" strokeWidth={2} fill="url(#leadsFill)" dot={false} activeDot={{ r: 4, strokeWidth: 0 }} />
+                            </AreaChart>
                         </ResponsiveContainer>
                     ) : (
                         <div className="flex items-center justify-center h-full text-muted-foreground text-sm">No lead data yet</div>
@@ -74,8 +80,8 @@ export function OverviewCharts({ leadsByMonth, propertyStatusData }: OverviewCha
 
             <Card className="col-span-1 lg:col-span-3">
                 <CardHeader>
-                    <CardTitle>Property Status</CardTitle>
-                    <CardDescription>Current distribution</CardDescription>
+                    <CardTitle>Listings</CardTitle>
+                    <CardDescription>For sale vs for rent</CardDescription>
                 </CardHeader>
                 <CardContent className="h-[280px]">
                     {propertyStatusData.length > 0 ? (
@@ -92,8 +98,8 @@ export function OverviewCharts({ leadsByMonth, propertyStatusData }: OverviewCha
                                     stroke="none"
                                     cornerRadius={6}
                                 >
-                                    {propertyStatusData.map((_, i) => (
-                                        <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                                    {propertyStatusData.map((d) => (
+                                        <Cell key={d.name} fill={d.name === 'For sale' ? 'hsl(var(--chart-1))' : 'hsl(var(--chart-3))'} />
                                     ))}
                                 </Pie>
                                 <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} />

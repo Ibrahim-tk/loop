@@ -52,11 +52,11 @@ export default function SecuritySettings() {
     }
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-md p-6">
             <h3 className="text-xl font-semibold text-white mb-4">Two-Factor Authentication (MFA)</h3>
             
-            {error && <div className="bg-red-500/10 text-red-500 p-3 rounded mb-4 text-sm">{error}</div>}
-            {success && <div className="bg-green-500/10 text-green-500 p-3 rounded mb-4 text-sm">{success}</div>}
+            {error && <div className="bg-red-500/10 text-red-500 p-3 rounded-md mb-4 text-sm">{error}</div>}
+            {success && <div className="bg-green-500/10 text-green-500 p-3 rounded-md mb-4 text-sm">{success}</div>}
 
             {status === 'unenrolled' && (
                 <div>
@@ -77,7 +77,7 @@ export default function SecuritySettings() {
                     <p className="text-zinc-400 text-sm">
                         1. Open your authenticator app (e.g. Google Authenticator) and scan this QR code.
                     </p>
-                    <div className="bg-white p-4 rounded-lg inline-block">
+                    <div className="bg-white p-4 rounded-md inline-block">
                         <QRCodeSVG value={qrCodeData.uri} size={200} />
                     </div>
                     

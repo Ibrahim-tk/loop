@@ -14,13 +14,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     return (
         <AdminThemeProvider>
-            <div id="admin-root" className="min-h-screen admin-theme dark">
+            <div id="admin-root" className="min-h-screen admin-theme">
                 <Sidebar
                     leadsBadge={unreadLeads || 0}
                     viewingsBadge={pendingViewings || 0}
                 />
                 <main className="lg:pl-64 min-h-screen">
-                    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+                    <div className="px-4 py-8 md:px-8 max-w-[1584px] mx-auto">
                         {children}
                     </div>
                 </main>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor } from '@/components/admin/icons';
 import { useAdminTheme } from './AdminThemeProvider';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

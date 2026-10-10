@@ -7,28 +7,32 @@
 /* ═══════════════════════════════════════════════
    SHADCN UI CSS VARIABLES (admin only)
    ═══════════════════════════════════════════════ */
+/* Right-hand content follows IBM Carbon: Gray 10 (light) / Gray 100 (dark)
+   layering, square corners, 1px subtle borders, bottom-border fields and the
+   2x spacing scale (2/4/8/12/16/24/32/48px). Buttons, fonts and the brand green
+   stay ours: --primary/--secondary/--accent are untouched so buttons don't shift. */
 .admin-theme {
-  --background: 240 5% 98.5%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --background: 0 0% 95.7%;        /* $background       #f4f4f4 */
+  --foreground: 0 0% 8.6%;         /* $text-primary     #161616 */
+  --card: 0 0% 100%;               /* $layer-01         #ffffff */
+  --card-foreground: 0 0% 8.6%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+  --popover-foreground: 0 0% 8.6%;
   --primary: 240 5.9% 10%;
   --primary-foreground: 0 0% 98%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
+  --muted: 0 0% 91%;               /* $field / $layer-accent (between #e8e8e8 and #e0e0e0) */
+  --muted-foreground: 0 0% 32.2%;  /* $text-secondary   #525252 */
   --accent: 240 4.8% 95.9%;
   --accent-foreground: 240 5.9% 10%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
+  --border: 0 0% 87.8%;            /* $border-subtle    #e0e0e0 */
+  --input: 0 0% 55.3%;             /* $border-strong    #8d8d8d */
+  --ring: 146 82% 32%;             /* $focus → brand green #0f9549 */
   --radius: 0.5rem;
-  --chart-1: 12 76% 61%;
+  --chart-1: 146 82% 32%;
   --chart-2: 173 58% 39%;
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
@@ -38,30 +42,45 @@
 }
 
 .admin-theme.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 7%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 8%;
-  --popover-foreground: 0 0% 98%;
+  --background: 0 0% 8.6%;         /* #161616 */
+  --foreground: 0 0% 95.7%;        /* #f4f4f4 */
+  --card: 0 0% 14.9%;              /* $layer-01 #262626 */
+  --card-foreground: 0 0% 95.7%;
+  --popover: 0 0% 14.9%;
+  --popover-foreground: 0 0% 95.7%;
   --primary: 0 0% 98%;
   --primary-foreground: 240 5.9% 10%;
   --secondary: 240 3.7% 15.9%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
+  --muted: 0 0% 22.4%;             /* $field-01 / $layer-accent #393939 */
+  --muted-foreground: 0 0% 77.6%;  /* #c6c6c6 */
   --accent: 240 3.7% 15.9%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 12%;
-  --input: 240 3.7% 12%;
-  --ring: 240 4.9% 83.9%;
-  --chart-1: 220 70% 50%;
+  --border: 0 0% 22.4%;            /* #393939 */
+  --input: 0 0% 43.5%;             /* #6f6f6f */
+  --ring: 146 70% 45%;
+  --chart-1: 146 70% 45%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
+}
+
+/* Left panel: our own accent green, a shade darker, identical in both themes. */
+.admin-theme .admin-sidebar {
+  --card: 147 85% 17%;
+  --card-foreground: 0 0% 100%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 145 35% 80%;
+  --secondary: 147 70% 25%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 147 75% 21%;
+  --accent-foreground: 0 0% 100%;
+  --border: 147 55% 24%;
+  --ring: 0 0% 100%;
+  color: hsl(var(--foreground));
 }
 
 .admin-theme *,
@@ -118,15 +137,21 @@
   --color-yellow-600:   #ca8a04;
 
   /* Gradients */
-  --gradient-brand: linear-gradient(180deg, #1e1e1e, #0f9549 54.18%, #c2cdde);
+  /* Stops are tokens too, so SVGs (which can't read a CSS gradient) use the same colors */
+  --gradient-brand-start: #1e1e1e; --gradient-brand-mid: #0f9549; --gradient-brand-end: #c2cdde;
+  --gradient-page-start:  #75d183; --gradient-page-end:  #e9e9e9;
+  --gradient-brand: linear-gradient(180deg, var(--gradient-brand-start), var(--gradient-brand-mid) 54.18%, var(--gradient-brand-end));
   --gradient-dark:  linear-gradient(180deg, #3e4f7f 0.48%, #0c0f19 29.81%, #0c0f19 64.9%, #0f9549 93.75%);
-  --gradient-page:  linear-gradient(180deg, #75d183, #e9e9e9, #e9e9e9);
+  --gradient-page:  linear-gradient(180deg, var(--gradient-page-start), var(--gradient-page-end), var(--gradient-page-end));
   --gradient-separator: linear-gradient(270deg, #1e1e1e, #0da34e 53.61%, #0a783a 59.98%, #1e1e1e 64.71%, #c2cdde 83.51%, #1e1e1e);
 
   /* Font families (next/font variables first, then fallbacks) */
   --font-pragati:    var(--font-pragati-loaded), "Pragati Narrow", Impact, sans-serif;            /* display headings, captions, numbers */
   --font-archivo:    var(--font-archivo-loaded), "Archivo", Arial, sans-serif;                    /* body, small headings, UI */
   --font-instrument: var(--font-instrument-loaded), "Instrument Serif", "Times New Roman", serif; /* quotes, accent headings */
+  --font-bricolage:  var(--font-bricolage-loaded), "Bricolage Grotesque", Arial, sans-serif;
+  /* H1–H4. Exploring Bricolage Grotesque; set back to var(--font-pragati) to revert. */
+  --font-heading:    var(--font-bricolage);
 
   /* Font sizes */
   --font-size-12: 12px;  --font-size-13: 13px;  --font-size-14: 14px;
@@ -135,12 +160,14 @@
   --font-size-36: 36px;  --font-size-40: 40px;  --font-size-46: 46px;
   --font-size-56: 56px;  --font-size-64: 64px;  --font-size-80: 80px;
   --font-size-88: 88px;  --font-size-200: 200px;
+  --font-size-44: 44px;  --font-size-72: 72px;
 
   /* Line heights */
   --line-height-12: 12px;  --line-height-16: 16px;  --line-height-20: 20px;
   --line-height-24: 24px;  --line-height-28: 28px;  --line-height-32: 32px;
   --line-height-36: 36px;  --line-height-40: 40px;  --line-height-48: 48px;
   --line-height-56: 56px;  --line-height-64: 64px;  --line-height-72: 72px;
+  --line-height-44: 44px;  --line-height-60: 60px;  --line-height-76: 76px;
   --line-height-140: 140px;
 
   /* Weights & tracking */
@@ -173,6 +200,8 @@
 
   /* Layout */
   --container-width: 1344px;
+  --content-max: 1440px;        /* max width of page content; backgrounds stay full-bleed */
+  --navbar-height: 64px;
 
   /* ---------- 2. SEMANTIC (use these in components) ---------- */
 
@@ -237,11 +266,19 @@
   --cards-gap:       var(--spacing-16);
   --fade-size:       var(--spacing-96);
 
-  /* Typography roles: headings (Pragati Narrow); h5–h6 switch to Archivo Medium */
-  --h1-size: var(--font-size-80); --h1-lh: var(--line-height-72); --h1-ls: var(--letter-spacing-tighter);
-  --h2-size: var(--font-size-56); --h2-lh: var(--line-height-48);
-  --h3-size: var(--font-size-46); --h3-lh: var(--line-height-40);
-  --h4-size: var(--font-size-36); --h4-lh: var(--line-height-32);
+  /* Listing sections: generous vertical rhythm */
+  --section-y:      var(--spacing-116); /* top/bottom padding of a content section */
+  --section-head:   var(--spacing-48);  /* heading row → content */
+  --grid-row-gap:   var(--spacing-24);  /* between rows of cards — equal to columns so the grid reads evenly */
+  --grid-col-gap:   var(--spacing-24);  /* between cards in a row */
+
+  /* Typography roles: headings (--font-heading); h5–h6 switch to Archivo Medium.
+     Display is the landing hero only; h1 is a page title, one clear step below it. */
+  --display-size: var(--font-size-72); --display-lh: var(--line-height-76);
+  --h1-size: var(--font-size-56); --h1-lh: var(--line-height-60); --h1-ls: var(--letter-spacing-tighter);
+  --h2-size: var(--font-size-40); --h2-lh: var(--line-height-44);
+  --h3-size: var(--font-size-32); --h3-lh: var(--line-height-36);
+  --h4-size: var(--font-size-24); --h4-lh: var(--line-height-28);
   --h5-size: var(--font-size-24); --h5-lh: var(--line-height-24);
   --h6-size: var(--font-size-20); --h6-lh: var(--line-height-24);
 
@@ -281,10 +318,11 @@
     --cards-gap:       var(--spacing-12);
     --fade-size:       var(--spacing-88);
 
-    --h1-size: var(--font-size-46); --h1-lh: var(--line-height-40);
-    --h2-size: var(--font-size-36); --h2-lh: var(--line-height-32);
-    --h3-size: var(--font-size-32); --h3-lh: var(--line-height-32);
-    --h4-size: var(--font-size-28); --h4-lh: var(--line-height-28);
+    --display-size: var(--font-size-46); --display-lh: var(--line-height-48);
+    --h1-size: var(--font-size-40); --h1-lh: var(--line-height-44);
+    --h2-size: var(--font-size-32); --h2-lh: var(--line-height-36);
+    --h3-size: var(--font-size-28); --h3-lh: var(--line-height-32);
+    --h4-size: var(--font-size-24); --h4-lh: var(--line-height-28);
     --h5-size: var(--font-size-18); --h5-lh: var(--line-height-24);
     --h6-size: var(--font-size-16); --h6-lh: var(--line-height-20);
 
@@ -306,8 +344,19 @@
   }
 }
 
+@media (max-width: 991px) {
+  :root {
+    --section-y: var(--spacing-88); --section-head: var(--spacing-40);
+    --grid-row-gap: var(--spacing-20); --grid-col-gap: var(--spacing-20);
+  }
+}
+
 @media (max-width: 767px) {
-  :root { --container-width: 382px; }
+  :root {
+    --container-width: 382px;
+    --section-y: var(--spacing-64); --section-head: var(--spacing-32);
+    --grid-row-gap: var(--spacing-16); --grid-col-gap: var(--spacing-16);
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -341,7 +390,7 @@
 
   /* Type roles (responsive via the heading and paragraph tokens) */
   --typeface-family: var(--font-archivo);
-  --typeface-display-base: var(--h1-size);
+  --typeface-display-base: var(--display-size);
   --typeface-heading-h1: var(--h1-size);
   --typeface-heading-h2: var(--h2-size);
   --typeface-heading-h3: var(--h3-size);
@@ -454,7 +503,7 @@
 
   /* Headings — in the base layer so Tailwind utilities can still override them */
   h1, h2, h3, h4 {
-    font-family: var(--font-pragati);
+    font-family: var(--font-heading);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-tight);
   }
@@ -489,7 +538,7 @@
 
   /* Headings */
   .u-h1, .u-h2, .u-h3, .u-h4 {
-    font-family: var(--font-pragati);
+    font-family: var(--font-heading);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-tight);
   }
@@ -567,8 +616,10 @@
     padding-right: 40px;
   }
 
+  /* Primary button — the one used in the navbar. Use this class instead of re-typing the utilities. */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary-500 px-6 py-3 font-medium text-white transition-all duration-300 hover:bg-accent-500 hover:shadow-lg hover:shadow-accent-500/25 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-[8px] whitespace-nowrap font-medium leading-normal text-white bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition-colors duration-300 active:scale-[0.98];
+    font-size: var(--typeface-paragraph-text-s);
   }
 
   .section-title {
@@ -661,4 +712,48 @@
   .animate-loading-bar {
     animation: slide-indeterminate 1.5s infinite ease-in-out;
   }
+}
+/* Blur-rise entrance: children fade up from a soft blur, staggered by --i. */
+@keyframes blur-rise {
+  from { opacity: 0; transform: translateY(16px); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+.blur-rise > * {
+  animation: blur-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+.blur-rise > :nth-child(2) { --i: 1; }
+.blur-rise > :nth-child(3) { --i: 2; }
+.blur-rise > :nth-child(4) { --i: 3; }
+@media (prefers-reduced-motion: reduce) {
+  .blur-rise > * { animation: none; }
+}
+
+/* Featured tag on photos — the original style: dark frosted glass, white text */
+.pill-glass {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 14px; font-weight: var(--font-weight-regular); line-height: 20px;
+  color: #fff;
+  background: rgb(0 0 0 / 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Modal motion: backdrop fades, panel rises from a soft blur */
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-rise {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 16px)); filter: blur(8px); }
+  to   { opacity: 1; transform: translate(-50%, -50%); filter: blur(0); }
+}
+.modal-overlay[data-state='open'] { animation: modal-fade 0.25s ease-out; }
+.modal-content[data-state='open'] { animation: modal-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay[data-state='open'], .modal-content[data-state='open'] { animation: none; }
+}
+
+/* Horizontal carousels: soften both edges so cards fade in and out of view */
+.fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 64px, #000 calc(100% - 64px), transparent);
 }

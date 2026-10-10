@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Lock, Bell, Palette, Save, Loader2, CheckCircle2, LogOut, Megaphone } from 'lucide-react';
+import { User, Lock, Bell, Palette, Save, Loader2, CheckCircle2, LogOut, Megaphone } from '@/components/admin/icons';
 import { signOut } from '@/lib/actions/auth';
 import toast from 'react-hot-toast';
 
@@ -317,7 +317,7 @@ export default function SettingsPage() {
                             <CardDescription>Manage your active sessions</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center justify-between rounded-lg border p-4">
+                            <div className="flex items-center justify-between rounded-md border p-4">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
                                         <p className="text-sm font-medium">Current Session</p>
@@ -388,7 +388,7 @@ export default function SettingsPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+                            <div className="flex items-center justify-between gap-4 rounded-md border p-4">
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium">
                                         &ldquo;Accepting new properties — Get a Free Rental Analysis&rdquo;

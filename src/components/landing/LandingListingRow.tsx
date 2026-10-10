@@ -10,12 +10,13 @@ interface LandingListingRowProps {
     tone?: 'white' | 'variant';
 }
 
-export default function LandingListingRow({ title, properties, viewAllHref, tone = 'white' }: LandingListingRowProps) {
+export default function LandingListingRow({ title, properties, viewAllHref, tone = 'variant' }: LandingListingRowProps) {
     if (properties.length === 0) return null;
 
     return (
-        <section className={`w-full py-12 lg:py-16 px-5 sm:px-8 lg:px-16 ${tone === 'variant' ? 'bg-[var(--surface-variant)]' : 'bg-white'}`}>
-            <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
+        <section className={`w-full py-[var(--section-y)] px-5 sm:px-8 lg:px-16 ${tone === 'variant' ? 'bg-[var(--surface-variant)]' : 'bg-white'}`}>
+            <div className="mx-auto w-full max-w-[var(--content-max)]">
+            <div className="flex items-end justify-between gap-4 mb-[var(--section-head)]">
                 <h2 className="text-[length:var(--typeface-heading-h2)] font-normal leading-none tracking-[-0.24px] text-[color:var(--on-surface-default)]">
                     {title}
                 </h2>
@@ -26,10 +27,11 @@ export default function LandingListingRow({ title, properties, viewAllHref, tone
                     View all <ArrowRight size={16} />
                 </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[var(--grid-col-gap)] gap-y-[var(--grid-row-gap)]">
                 {properties.map((property) => (
                     <PropertyCard key={property.id} property={property} viewMode="grid" />
                 ))}
+            </div>
             </div>
         </section>
     );

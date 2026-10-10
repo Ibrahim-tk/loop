@@ -55,13 +55,15 @@ export default function LandingBrowse({ properties }: { properties: Property[] }
     if (areas.length < 2 && types.length < 2) return null;
 
     return (
-        <section className="w-full py-12 lg:py-16 px-5 sm:px-8 lg:px-16 bg-[var(--surface-variant)]">
-            <h2 className="mb-8 text-[length:var(--typeface-heading-h2)] font-normal leading-none tracking-[-0.24px] text-[color:var(--on-surface-default)]">
+        <section className="w-full py-[var(--section-y)] px-5 sm:px-8 lg:px-16 bg-[var(--surface-variant)]">
+            <div className="mx-auto w-full max-w-[var(--content-max)]">
+            <h2 className="mb-[var(--section-head)] text-[length:var(--typeface-heading-h2)] font-normal leading-none tracking-[-0.24px] text-[color:var(--on-surface-default)]">
                 Browse properties
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <ChipGroup title="By area" chips={areas} />
                 <ChipGroup title="By type" chips={types} />
+            </div>
             </div>
         </section>
     );

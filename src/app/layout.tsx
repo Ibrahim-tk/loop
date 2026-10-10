@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Archivo, Instrument_Serif, Pragati_Narrow } from 'next/font/google';
+import { Archivo, Bricolage_Grotesque, Instrument_Serif, Pragati_Narrow } from 'next/font/google';
 import { AppToaster } from '@/components/ui/AppToaster';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
@@ -24,6 +24,13 @@ const pragatiNarrow = Pragati_Narrow({
     subsets: ['latin'],
     weight: ['400', '700'],
     variable: '--font-pragati-loaded',
+    display: 'swap',
+});
+
+const bricolage = Bricolage_Grotesque({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+    variable: '--font-bricolage-loaded',
     display: 'swap',
 });
 
@@ -64,7 +71,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`antialiased ${archivo.variable} ${instrumentSerif.variable} ${pragatiNarrow.variable}`}
+            className={`antialiased ${archivo.variable} ${instrumentSerif.variable} ${pragatiNarrow.variable} ${bricolage.variable}`}
         >
             <body className="min-h-screen bg-[var(--surface-variant)]">
                 <SpeedInsights />

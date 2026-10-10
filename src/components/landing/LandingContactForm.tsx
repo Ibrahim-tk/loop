@@ -7,7 +7,12 @@ import { INQUIRY_OPTIONS, getLeadTypeFromHelpType } from '@/lib/constants/inquir
 import { PublicInput, PublicSelect, PublicTextarea } from '@/components/ui/public-inputs';
 import toast from 'react-hot-toast';
 
-export default function LandingContactForm() {
+/**
+ * `propertyTitle` switches to the short property enquiry form: name, phone, email, message.
+ * Without it, this is the general contact form with the "How can we help?" picker.
+ */
+export default function LandingContactForm({ propertyTitle }: { propertyTitle?: string } = {}) {
+    const isPropertyEnquiry = Boolean(propertyTitle);
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
@@ -22,7 +27,7 @@ export default function LandingContactForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!form.helpType) {
+        if (!isPropertyEnquiry && !form.helpType) {
             toast.error('Please select how we can help you.');
             return;
         }
@@ -33,9 +38,9 @@ export default function LandingContactForm() {
                 name: `${form.firstName} ${form.lastName}`.trim(),
                 email: form.email,
                 phone: form.phone,
-                type: getLeadTypeFromHelpType(form.helpType),
-                helpType: form.helpType,
-                message: form.message,
+                type: isPropertyEnquiry ? 'GENERAL' : getLeadTypeFromHelpType(form.helpType),
+                helpType: isPropertyEnquiry ? 'Property enquiry' : form.helpType,
+                message: isPropertyEnquiry ? `Re: ${propertyTitle}\n\n${form.message}` : form.message,
             });
             setSubmitted(true);
             toast.success('Message sent! We\'ll get back to you within 24 hours.');
@@ -75,6 +80,21 @@ export default function LandingContactForm() {
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            {isPropertyEnquiry ? (
+                <div className="flex flex-col gap-2">
+                    <label className="font-light text-[length:var(--typeface-paragraph-text)] leading-6 text-[color:var(--on-surface-default)]">
+                        Your name <span className="text-red-500">*</span>
+                    </label>
+                    <PublicInput
+                        type="text"
+                        required
+                        autoComplete="name"
+                        value={form.firstName}
+                        onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                    />
+                </div>
+            ) : (
+            <>
             {/* First Name + Last Name Row */}
             <div className="flex flex-col sm:flex-row gap-6">
                 <div className="flex flex-col gap-2 flex-1">
@@ -112,6 +132,8 @@ export default function LandingContactForm() {
                     options={INQUIRY_OPTIONS.map((opt) => ({ label: opt.label, value: opt.label }))}
                 />
             </div>
+            </>
+            )}
 
             {/* Phone Number */}
             <div className="flex flex-col gap-2">
@@ -145,11 +167,11 @@ export default function LandingContactForm() {
                 </label>
                 <PublicTextarea
                     required
-                    rows={6}
+                    rows={isPropertyEnquiry ? 4 : 6}
                     placeholder="Type your message..."
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="min-h-[120px] sm:min-h-[180px]"
+                    className={isPropertyEnquiry ? 'min-h-[120px]' : 'min-h-[120px] sm:min-h-[180px]'}
                 />
             </div>
 
@@ -158,9 +180,9 @@ export default function LandingContactForm() {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="bg-[var(--on-surface-primary)] px-[22.5px] py-[15px] rounded-[6px] w-full sm:w-fit text-[length:var(--typeface-paragraph-text-s)] font-medium text-white leading-normal min-w-[80px] hover:bg-[var(--foundation-blue-blue-7)] transition-colors disabled:opacity-50"
+                    className={isPropertyEnquiry ? 'btn-primary w-full disabled:opacity-50' : 'bg-[var(--on-surface-primary)] px-[22.5px] py-[15px] rounded-[6px] w-full sm:w-fit text-[length:var(--typeface-paragraph-text-s)] font-medium text-white leading-normal min-w-[80px] hover:bg-[var(--foundation-blue-blue-7)] transition-colors disabled:opacity-50'}
                 >
-                    {submitting ? 'Sending...' : 'Submit'}
+                    {submitting ? 'Sending...' : isPropertyEnquiry ? 'Send message' : 'Submit'}
                 </button>
             </div>
         </form>
