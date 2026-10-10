@@ -2,7 +2,7 @@
 
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-    ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area,
+    ResponsiveContainer, AreaChart, Area,
     Legend,
 } from 'recharts';
 import {
@@ -40,7 +40,7 @@ const tooltipItemStyle = {
 
 interface OverviewChartsProps {
     leadsByMonth: { month: string; count: number }[];
-    propertyStatusData: { name: string; value: number }[];
+    propertyStatusData: { status: string; name: string; value: number; live: boolean }[];
 }
 
 interface AnalyticsChartsProps {
@@ -80,32 +80,31 @@ export function OverviewCharts({ leadsByMonth, propertyStatusData }: OverviewCha
 
             <Card className="col-span-1 lg:col-span-3">
                 <CardHeader>
-                    <CardTitle>Listings</CardTitle>
-                    <CardDescription>For sale vs for rent</CardDescription>
+                    <CardTitle>Listings by status</CardTitle>
+                    <CardDescription>Live on the site vs kept on record</CardDescription>
                 </CardHeader>
-                <CardContent className="h-[280px]">
+                <CardContent className="h-[280px] overflow-y-auto">
                     {propertyStatusData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={propertyStatusData}
-                                    cx="50%"
-                                    cy="45%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={4}
-                                    dataKey="value"
-                                    stroke="none"
-                                    cornerRadius={6}
-                                >
-                                    {propertyStatusData.map((d) => (
-                                        <Cell key={d.name} fill={d.name === 'For sale' ? 'hsl(var(--chart-1))' : 'hsl(var(--chart-3))'} />
-                                    ))}
-                                </Pie>
-                                <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} />
-                                <Legend wrapperStyle={{ fontSize: 12, color: 'hsl(var(--muted-foreground))' }} />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        <ul className="flex flex-col gap-4">
+                            {propertyStatusData.map((d) => {
+                                const total = propertyStatusData.reduce((n, x) => n + x.value, 0);
+                                const live = d.live;
+                                return (
+                                    <li key={d.status}>
+                                        <div className="flex items-baseline justify-between text-sm">
+                                            <span>{d.name}</span>
+                                            <span className="tabular-nums font-medium">{d.value}</span>
+                                        </div>
+                                        <div className="mt-1.5 h-2 rounded-full bg-muted overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full"
+                                                style={{ width: `${(d.value / total) * 100}%`, background: live ? 'hsl(var(--chart-1))' : 'hsl(var(--chart-3))' }}
+                                            />
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     ) : (
                         <div className="flex items-center justify-center h-full text-muted-foreground text-sm">No properties yet</div>
                     )}

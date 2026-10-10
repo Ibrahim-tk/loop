@@ -3,14 +3,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { CalendarClock, Check, CheckCheck, Loader2, Mail, Phone, Search, X } from '@/components/admin/icons';
+import { Check, CheckCheck, Loader2, Mail, Phone, Search, X } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { updateViewingStatus } from '@/lib/actions/viewings';
 import { formatSlot, formatViewingDate, toDateKey } from '@/lib/viewings';
 import type { Viewing, ViewingStatus } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Icon3D from '@/components/ui/Icon3D';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import Dropdown from '@/components/ui/Dropdown';
 
 type Row = Viewing & { property: { id: string; title: string; city: string } | null };
 
@@ -23,7 +25,7 @@ const STATUS_STYLES: Record<ViewingStatus, string> = {
 const STATUS_LABELS: Record<ViewingStatus, string> = { PENDING: 'Pending', CONFIRMED: 'Confirmed', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
 
 const selectClass =
-    'h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
+    'h-9 w-full sm:w-44 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
 
 export default function AdminViewingsPage() {
     const [rows, setRows] = useState<Row[]>([]);
@@ -98,10 +100,10 @@ export default function AdminViewingsPage() {
                         </button>
                     ))}
                 </div>
-                <select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value as ViewingStatus | '')} className={selectClass}>
+                <Dropdown aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value as ViewingStatus | '')} className={selectClass}>
                     <option value="">All statuses</option>
                     {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                </select>
+                </Dropdown>
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <input type="search" aria-label="Search viewings" placeholder="Search name, email, property…" value={search} onChange={(e) => setSearch(e.target.value)}
@@ -122,7 +124,7 @@ export default function AdminViewingsPage() {
                         </div>
                     ) : filtered.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground space-y-3">
-                            <CalendarClock className="h-12 w-12 mx-auto opacity-30" />
+                            <Icon3D name="calendar" size={88} className="mx-auto" />
                             <p>{rows.length === 0 ? 'No viewing requests yet. They appear here when visitors book from a property page.' : 'No viewings match these filters.'}</p>
                             {hasFilters && rows.length > 0 && (
                                 <Button variant="outline" size="sm" onClick={() => { setWhen('all'); setStatus(''); setSearch(''); }}>Show all viewings</Button>

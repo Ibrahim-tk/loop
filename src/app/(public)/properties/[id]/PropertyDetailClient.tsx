@@ -7,7 +7,7 @@ import Link from 'next/link';
 import {
     Bed, Bathtub, Car, CalendarDots, ArrowsOut,
     ArrowLeft, ArrowRight, CaretRight, CaretDown,
-    MapPin, X, Check, CalendarCheck, ShareNetwork, ArrowUpRight, Scales, ChatCircleText,
+    MapPin, X, Check, ShareNetwork, ArrowUpRight, Phone, EnvelopeSimple,
 } from '@phosphor-icons/react';
 import { ImageIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -27,10 +27,9 @@ import { WHATSAPP_URL } from '@/lib/constants/contact';
 /** Sidebar cards on the listing page. */
 const SIDE_CARD = 'scroll-mt-[calc(var(--header-height)+16px)] bg-[var(--surface-default)] rounded-[8px] p-5 flex flex-col gap-4';
 
-function CardHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+function CardHeading({ children }: { children: React.ReactNode }) {
     return (
-        <h3 className="flex items-center gap-2.5 text-[length:var(--typeface-heading-h5)] leading-7">
-            <span className="text-[color:var(--action-primary-hover)]">{icon}</span>
+        <h3 className="text-[length:var(--typeface-heading-h5)] leading-7">
             {children}
         </h3>
     );
@@ -651,9 +650,45 @@ export default function PropertyDetailClient({
                         {/* ── Right Column ────────────────────────────── */}
                         <div className="lg:w-[390px] shrink-0 flex flex-col gap-6">
 
+                            {/* ── Listing agent (only when the admin added one) ─ */}
+                            {property.agent_name?.trim() && (
+                                <div className={SIDE_CARD}>
+                                    <CardHeading>Listing agent</CardHeading>
+                                    <div className="flex items-center gap-4">
+                                        {property.agent_photo_url ? (
+                                            <Image src={property.agent_photo_url} alt={property.agent_name} width={56} height={56} className="size-14 rounded-full object-cover shrink-0" />
+                                        ) : (
+                                            <span className="flex items-center justify-center size-14 rounded-full bg-[var(--surface-variant)] text-[length:var(--typeface-heading-h5)] font-medium shrink-0">
+                                                {property.agent_name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                                            </span>
+                                        )}
+                                        <div className="min-w-0">
+                                            <p className="font-medium truncate">{property.agent_name}</p>
+                                            <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">Listing agent</p>
+                                        </div>
+                                    </div>
+                                    {(property.agent_phone || property.agent_email) && (
+                                        <div className="flex flex-col gap-2">
+                                            {property.agent_phone && (
+                                                <a href={`tel:${property.agent_phone.replace(/[^+\d]/g, '')}`}
+                                                    className="inline-flex items-center gap-2 text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)] hover:text-[color:var(--action-primary-hover)] transition-colors">
+                                                    <Phone size={16} className="shrink-0" /> {property.agent_phone}
+                                                </a>
+                                            )}
+                                            {property.agent_email && (
+                                                <a href={`mailto:${property.agent_email}`}
+                                                    className="inline-flex items-center gap-2 text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)] hover:text-[color:var(--action-primary-hover)] transition-colors break-all">
+                                                    <EnvelopeSimple size={16} className="shrink-0" /> {property.agent_email}
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* ── Booking ─────────────────────────────── */}
                             <div id="book-viewing" className={SIDE_CARD}>
-                                <CardHeading icon={<CalendarCheck size={22} />}>Book a viewing</CardHeading>
+                                <CardHeading>Book a viewing</CardHeading>
                                 {bookable ? (
                                     <>
                                         <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">Free, 30 minutes, no account needed. Pick a day and time that suits you.</p>
@@ -666,7 +701,7 @@ export default function PropertyDetailClient({
 
                             {/* ── Compare ─────────────────────────────── */}
                             <div className={SIDE_CARD}>
-                                <CardHeading icon={<Scales size={22} />}>Compare</CardHeading>
+                                <CardHeading>Compare</CardHeading>
                                 <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">See this home side by side with another listing: price, area, rooms and more.</p>
                                 <button type="button" onClick={() => setCompareOpen(true)}
                                     className="inline-flex items-center justify-center gap-2 h-11 w-full rounded-[8px] ring-1 ring-[var(--outline-default)] text-[length:var(--typeface-paragraph-text-s)] font-medium hover:ring-[var(--action-primary-hover)] hover:text-[color:var(--action-primary-hover)] transition-colors">
@@ -677,7 +712,7 @@ export default function PropertyDetailClient({
                             {/* ── Location (only when the admin added a maps link) ─ */}
                             {property.google_maps_url && (
                                 <div className={SIDE_CARD}>
-                                    <CardHeading icon={<MapPin size={22} />}>Location</CardHeading>
+                                    <CardHeading>Location</CardHeading>
                                     <a href={property.google_maps_url} target="_blank" rel="noopener noreferrer"
                                         className="group relative block h-[200px] rounded-[8px] overflow-hidden">
                                         <Image src="/landing-page/map-dark.webp" alt={`Map around ${property.address}, ${property.city}`} fill sizes="390px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -696,7 +731,7 @@ export default function PropertyDetailClient({
 
                             {/* ── Ask a question ──────────────────────── */}
                             <div id="ask-question" className={SIDE_CARD}>
-                                <CardHeading icon={<ChatCircleText size={22} />}>Ask a question</CardHeading>
+                                <CardHeading>Ask a question</CardHeading>
                                 <LandingContactForm propertyTitle={property.title} />
                             </div>
                         </div>

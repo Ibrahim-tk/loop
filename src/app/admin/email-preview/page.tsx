@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { buildLeadNotificationHtml } from '@/lib/email/lead-notification';
 import { INQUIRY_OPTIONS } from '@/lib/constants/inquiry-options';
+import Dropdown from '@/components/ui/Dropdown';
 
 const SAMPLE_DATA = {
     name: 'John Doe',
@@ -32,7 +33,7 @@ export default function EmailPreviewPage() {
 
             <div className="flex items-center gap-3">
                 <label className="text-white/60 text-sm">Inquiry Type:</label>
-                <select
+                <Dropdown
                     value={helpType}
                     onChange={(e) => setHelpType(e.target.value)}
                     className="glass-input"
@@ -42,7 +43,7 @@ export default function EmailPreviewPage() {
                             {opt.label}
                         </option>
                     ))}
-                </select>
+                </Dropdown>
             </div>
 
             <div className="glass-card overflow-hidden">

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { Heart } from '@phosphor-icons/react';
 import WhatsappIcon from '@/components/ui/WhatsappIcon';
+import NavSearch from '@/components/landing/NavSearch';
 import { useSavedHydrated, useSavedProperties } from '@/stores/savedProperties';
 
 const navLinks = [
@@ -53,7 +54,7 @@ export default function LandingNavbar({ variant = 'landing' }: LandingNavbarProp
             >
                 <div className="h-[var(--navbar-height)] flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] gap-6 xl:gap-8 pl-5 pr-2.5">
                     <Link href="/" className="relative shrink-0 flex items-center justify-self-start h-[22px] sm:h-[26px]" onClick={() => setIsOpen(false)}>
-                        <Logo markClassName="h-[26px] sm:h-[31px]" className="h-full gap-3 text-[20px] sm:text-[22px] text-[color:var(--text-primary)]" />
+                        <Logo markClassName="h-[26px] sm:h-[31px]" className="h-full gap-4 text-[20px] sm:text-[22px] text-[color:var(--text-primary)]" />
                     </Link>
 
                     <div className="hidden lg:flex items-center gap-1 xl:gap-2">
@@ -69,6 +70,7 @@ export default function LandingNavbar({ variant = 'landing' }: LandingNavbarProp
                     </div>
 
                     <div className="hidden lg:flex justify-self-end items-center gap-3">
+                    <NavSearch />
                     <Link
                         href={saved.href}
                         aria-label={saved.count ? `${saved.label} (${saved.count})` : saved.label}
@@ -91,6 +93,8 @@ export default function LandingNavbar({ variant = 'landing' }: LandingNavbarProp
                         {WHATSAPP_DISPLAY}
                     </a>
                     </div>
+
+                    <div className="lg:hidden ml-auto -mr-4"><NavSearch /></div>
 
                     <button
                         className={`lg:hidden p-2 rounded-lg transition-colors duration-300 z-50 relative text-[var(--text-primary)] hover:bg-black/5`}

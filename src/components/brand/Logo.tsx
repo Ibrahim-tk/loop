@@ -14,13 +14,13 @@ export function LogoMark({ className, title }: { className?: string; title?: str
     );
 }
 
-/** Mark + "Fasana Homes" wordmark. Height drives the size; the text inherits color. */
+/** Mark + "Fasana" wordmark. Height drives the size; the text inherits color. */
 export default function Logo({ className, markClassName }: { className?: string; markClassName?: string }) {
     return (
-        <span className={cn('inline-flex items-center gap-2 h-[26px]', className)}>
+        <span className={cn('inline-flex items-center gap-4 h-[26px]', className)}>
             <LogoMark className={cn('h-full w-auto', markClassName)} />
             <span className="font-[family-name:var(--font-bricolage-loaded)] font-semibold tracking-[-0.02em] leading-none text-[length:1em] whitespace-nowrap">
-                Fasana Homes
+                Fasana
             </span>
         </span>
     );

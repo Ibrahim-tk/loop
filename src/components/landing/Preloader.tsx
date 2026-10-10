@@ -7,7 +7,7 @@ const MAX_MS = 9000; // never block the page on a slow network
 const READY_RATIO = 0.6; // share of the video buffered before we let go
 
 /*
- * Full-screen brand-green cover with a huge "Fasana Homes" that fills with white
+ * Full-screen brand-green cover with a huge "Fasana" that fills with white
  * as the hero video buffers, so the video starts smoothly instead of stuttering.
  */
 export default function Preloader() {
@@ -78,22 +78,22 @@ export default function Preloader() {
     return (
         <div
             role="progressbar"
-            aria-label="Loading Fasana Homes"
+            aria-label="Loading Fasana"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={pct}
             className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[var(--color-green-500)] transition-transform duration-[900ms] ease-[cubic-bezier(0.83,0,0.17,1)] ${done ? '-translate-y-full pointer-events-none' : 'translate-y-0'}`}
         >
-            <div className="relative select-none whitespace-nowrap font-[family-name:var(--font-bricolage-loaded)] font-semibold leading-none tracking-[-0.04em] text-[clamp(64px,15vw,320px)]">
+            <div className="relative select-none whitespace-nowrap font-[family-name:var(--font-bricolage-loaded)] font-semibold leading-none tracking-[-0.04em] text-[clamp(96px,26vw,560px)]">
                 {/* Dull base */}
-                <span className="block text-white/20">Fasana Homes</span>
+                <span className="block text-white/20">Fasana</span>
                 {/* White fill, revealed left to right */}
                 <span
                     aria-hidden="true"
                     className="absolute inset-0 block text-white"
                     style={{ clipPath: `inset(0 ${100 - progress * 100}% 0 0)` }}
                 >
-                    Fasana Homes
+                    Fasana
                 </span>
             </div>
         </div>

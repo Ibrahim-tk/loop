@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { usePrefs, type AreaUnit, type Currency } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import Dropdown from '@/components/ui/Dropdown';
 
 const CURRENCIES: Currency[] = ['PKR', 'USD', 'AED', 'GBP', 'SAR'];
 const AREA_UNITS: { value: AreaUnit; label: string }[] = [
@@ -24,7 +25,7 @@ export default function UnitSwitcher({ className }: { className?: string }) {
 
     return (
         <div className={cn('flex items-center gap-2', className)}>
-            <select
+            <Dropdown
                 aria-label="Currency"
                 title="Prices converted at indicative rates"
                 value={currency}
@@ -32,15 +33,15 @@ export default function UnitSwitcher({ className }: { className?: string }) {
                 className={selectClass}
             >
                 {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <select
+            </Dropdown>
+            <Dropdown
                 aria-label="Area unit"
                 value={areaUnit}
                 onChange={(e) => setAreaUnit(e.target.value as AreaUnit)}
                 className={selectClass}
             >
                 {AREA_UNITS.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
-            </select>
+            </Dropdown>
         </div>
     );
 }

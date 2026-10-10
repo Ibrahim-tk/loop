@@ -73,6 +73,8 @@ export const propertySchema = z.object({
     amenities: z.array(z.string().trim().min(1).max(40)).max(30),
     features: z.array(z.string().trim().min(1).max(80)).max(20),
 
+    /** Admin toggle; not stored. When off, the agent fields are cleared on save. */
+    has_agent: z.boolean(),
     agent_name: z.string().trim().max(100),
     agent_phone: z
         .string()
@@ -91,6 +93,16 @@ export const propertySchema = z.object({
 
     google_maps_url: optionalUrl,
     zillow_url: optionalUrl,
+}).superRefine((v, ctx) => {
+    if (!v.has_agent) return;
+    const required: [keyof typeof v, string][] = [
+        ['agent_name', 'Agent name is required'],
+        ['agent_phone', 'Agent phone is required'],
+        ['agent_email', 'Agent email is required'],
+    ];
+    for (const [key, message] of required) {
+        if (!v[key]) ctx.addIssue({ code: z.ZodIssueCode.custom, path: [key], message });
+    }
 });
 
 /** Raw form state: every input is a string; parsing turns it into a PropertyRecord. */
@@ -123,6 +135,7 @@ export const EMPTY_PROPERTY_FORM: PropertyFormValues = {
     description: '',
     amenities: [],
     features: [],
+    has_agent: false,
     agent_name: '',
     agent_phone: '',
     agent_email: '',

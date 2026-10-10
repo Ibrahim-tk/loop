@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Icon3D from '@/components/ui/Icon3D';
-import { ChatCircle, SpinnerGap, WarningCircle } from '@phosphor-icons/react';
+import { SpinnerGap, WarningCircle } from '@phosphor-icons/react';
 import HeroVideo from '@/components/landing/HeroVideo';
 import { submitLead } from '@/lib/actions/leads';
 import { INQUIRY_OPTIONS, getLeadTypeFromHelpType } from '@/lib/constants/inquiry-options';
+import Dropdown from '@/components/ui/Dropdown';
 
 // Mirrors the inquiry form on the property detail page (ViewingBooking details step)
 interface Details {
@@ -86,10 +87,12 @@ export default function ContactPage() {
     );
 
     return (
-        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 pt-[calc(var(--header-height)+32px)] pb-16">
+        <section className="relative min-h-[100dvh] flex justify-end">
             <HeroVideo />
 
-            <div className="relative z-10 w-full max-w-[520px] bg-[var(--surface-default)] rounded-[8px] p-5 sm:p-6 flex flex-col gap-4 shadow-[0_24px_60px_rgb(0,0,0,0.25)]">
+            {/* Form panel: full height, right half on desktop, full width on mobile */}
+            <div className="relative z-10 w-full lg:w-1/2 min-h-[100dvh] bg-[var(--surface-default)] flex flex-col justify-center px-5 sm:px-10 lg:px-16 pt-[calc(var(--header-height)+48px)] pb-12">
+                <div className="w-full max-w-[520px] mx-auto flex flex-col gap-4">
                 {done ? (
                     <div className="blur-rise flex flex-col items-center text-center gap-3 py-4" role="status">
                         <Icon3D name="check" size={88} className="mb-1" />
@@ -104,10 +107,7 @@ export default function ContactPage() {
                     </div>
                 ) : (
                     <>
-                        <h1 className="flex items-center gap-2.5 text-[length:var(--typeface-heading-h5)] leading-7">
-                            <span className="text-[color:var(--action-primary-hover)]"><ChatCircle size={22} /></span>
-                            Contact us
-                        </h1>
+                        <h1 className="text-[length:var(--typeface-heading-h3)] leading-tight">Contact us</h1>
                         <p className="text-[length:var(--typeface-paragraph-text-s)] text-[color:var(--text-secondary)]">
                             Questions about a property, renting, selling or management? Send us a message and we&apos;ll reply within 24 hours.
                         </p>
@@ -127,12 +127,12 @@ export default function ContactPage() {
                                 <label htmlFor="c-helpType" className={labelClass}>
                                     How can we help?<span className="text-[color:var(--text-danger)]"> *</span>
                                 </label>
-                                <select id="c-helpType" value={details.helpType}
+                                <Dropdown id="c-helpType" value={details.helpType}
                                     aria-invalid={Boolean(errors.helpType)} aria-describedby={errors.helpType ? 'c-helpType-err' : undefined}
                                     onChange={(e) => update('helpType', e.target.value)} className={inputClass}>
                                     <option value="" disabled>Choose a topic</option>
                                     {INQUIRY_OPTIONS.map((o) => <option key={o.label} value={o.label}>{o.label}</option>)}
-                                </select>
+                                </Dropdown>
                                 {errors.helpType && <p id="c-helpType-err" className="mt-1 text-[12px] text-[color:var(--text-danger)]">{errors.helpType}</p>}
                             </div>
                             <div>
@@ -150,6 +150,7 @@ export default function ContactPage() {
                         </form>
                     </>
                 )}
+                </div>
             </div>
         </section>
     );

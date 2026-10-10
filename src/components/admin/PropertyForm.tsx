@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { AlertCircle, ArrowLeft, Link2, Loader2, Plus, Save, X } from '@/components/admin/icons';
+import { AlertCircle, ChevronLeft, Link2, Loader2, Plus, Save, X } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { saveProperty } from '@/lib/actions/properties';
 import { syncPropertyImages } from '@/lib/admin/propertyImages';
@@ -16,7 +16,7 @@ import {
     type PropertyFieldErrors,
     type PropertyFormValues,
 } from '@/lib/propertySchema';
-import { AMENITY_OPTIONS, FURNISHING_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/properties';
+import { AMENITY_OPTIONS, FURNISHING_LABELS, PROPERTY_TYPE_LABELS, SIMPLE_STATUS_LABELS, LIVE_SIMPLE_STATUSES, toSimpleStatus, fromSimpleStatus, type SimpleStatus } from '@/lib/properties';
 import ImageUploader, { type ImageItem } from '@/components/admin/ImageUploader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,7 +24,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice, SQFT_PER_KANAL, SQFT_PER_MARLA } from '@/lib/utils';
+import Dropdown from '@/components/ui/Dropdown';
+import PropertyCard from '@/components/listings/PropertyCard';
+import type { Property } from '@/lib/types';
 
 
 const selectClass =
@@ -51,6 +54,23 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
     const [progress, setProgress] = useState('');
     const [dirty, setDirty] = useState(false);
     const formRef = useRef<HTMLFormElement>(null);
+    // Area is stored in sq ft; admins enter it in Marla or Kanal.
+    const [areaUnit, setAreaUnit] = useState<'MARLA' | 'KANAL'>(() => {
+        const sqft = Number(initialValues.sqft);
+        return sqft >= SQFT_PER_KANAL && sqft % SQFT_PER_KANAL === 0 ? 'KANAL' : 'MARLA';
+    });
+    const sqftPerUnit = areaUnit === 'KANAL' ? SQFT_PER_KANAL : SQFT_PER_MARLA;
+    const [areaInput, setAreaInput] = useState(() => {
+        const sqft = Number(initialValues.sqft);
+        if (!sqft) return '';
+        const per = sqft >= SQFT_PER_KANAL && sqft % SQFT_PER_KANAL === 0 ? SQFT_PER_KANAL : SQFT_PER_MARLA;
+        return String(Math.round((sqft / per) * 100) / 100);
+    });
+    const setArea = (value: string, per: number) => {
+        setAreaInput(value);
+        const n = Number(value);
+        set('sqft', value.trim() && Number.isFinite(n) ? String(Math.round(n * per)) : value);
+    };
 
     // Warn before leaving with unsaved changes
     useEffect(() => {
@@ -171,24 +191,46 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
         }
     };
 
-    const priceLabel = form.listing_type === 'RENT' ? 'Monthly rent (USD)' : 'Sale price (USD)';
+    const priceLabel = form.listing_type === 'RENT' ? 'Monthly rent (PKR)' : 'Sale price (PKR)';
+    const priceValue = Number(form.rent_price);
     const errorCount = Object.values(errors).filter(Boolean).length;
 
+    // Live preview of the public listing card, built from the form as it stands.
+    const preview = {
+        id: propertyId ?? 'preview',
+        title: form.title.trim() || 'Property title',
+        address: form.address,
+        city: form.city.trim() || 'City',
+        zip: form.zip,
+        rent_price: priceValue || 0,
+        bedrooms: Number(form.bedrooms) || 0,
+        bathrooms: Number(form.bathrooms) || 0,
+        sqft: Number(form.sqft) || 0,
+        status: form.status,
+        listing_type: form.listing_type,
+        property_type: form.property_type,
+        furnishing: form.furnishing,
+        featured: form.featured,
+        description: form.description,
+        amenities: form.amenities,
+        features: form.features,
+        view_count: 0,
+        click_count: 0,
+        created_at: '',
+        updated_at: '',
+        property_images: images[0] ? [{ id: 'preview', property_id: '', storage_url: images[0].url, display_order: 0 }] : [],
+    } as Property;
+
     return (
-        <form ref={formRef} onSubmit={handleSubmit} noValidate className="max-w-4xl space-y-6 pb-24">
+        <form ref={formRef} onSubmit={handleSubmit} noValidate className="grid gap-6 pb-24 xl:grid-cols-[minmax(0,56rem)_340px] items-start">
+          <div className="min-w-0 space-y-6">
             {/* Header */}
-            <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href="/admin/properties" aria-label="Back to properties">
-                        <ArrowLeft className="h-5 w-5" />
-                    </Link>
-                </Button>
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">{mode === 'create' ? 'New property' : 'Edit property'}</h1>
-                    <p className="text-sm text-muted-foreground">
-                        {mode === 'create' ? 'Fields marked * are required.' : 'Changes appear on the public site as soon as you save.'}
-                    </p>
-                </div>
+            <div className="flex items-center gap-3">
+                <Link href="/admin/properties" aria-label="Back to properties"
+                    className="-ml-2 inline-flex items-center justify-center size-10 rounded-md text-foreground hover:text-[color:var(--color-green-500)] transition-colors">
+                    <ChevronLeft className="h-7 w-7" />
+                </Link>
+                <h1 className="text-2xl font-bold tracking-tight">{mode === 'create' ? 'New property' : 'Edit property'}</h1>
             </div>
 
             {errorCount > 0 && (
@@ -206,27 +248,48 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                 </CardHeader>
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                     <div className="sm:col-span-2">
-                        <Label htmlFor="pf-title">Title *</Label>
+                        <Label htmlFor="pf-title">Title <span className="text-destructive">*</span></Label>
                         <Input placeholder="e.g. Modern Hillside Villa" {...text('title')} />
                         <ErrorText name="title" />
                     </div>
                     <div>
-                        <Label htmlFor="pf-listing_type">Listing type *</Label>
-                        <select {...text('listing_type')} className={selectClass}>
-                            <option value="SALE">For sale</option>
-                            <option value="RENT">For rent</option>
-                        </select>
-                        <ErrorText name="listing_type" />
-                    </div>
-                    <div>
-                        <Label htmlFor="pf-property_type">Property type *</Label>
-                        <select {...text('property_type')} className={selectClass}>
+                        <Label htmlFor="pf-property_type">Property type <span className="text-destructive">*</span></Label>
+                        <Dropdown {...text('property_type')} className={selectClass}>
                             {Object.entries(PROPERTY_TYPE_LABELS).map(([v, l]) => (
                                 <option key={v} value={v}>{l}</option>
                             ))}
-                        </select>
+                        </Dropdown>
                         <ErrorText name="property_type" />
                     </div>
+                    <div>
+                        <Label htmlFor="pf-status">Status <span className="text-destructive">*</span></Label>
+                        <Dropdown
+                            id="pf-status"
+                            value={toSimpleStatus(form)}
+                            onChange={(e) => {
+                                const next = fromSimpleStatus(e.target.value as SimpleStatus, form.listing_type);
+                                setForm((f) => ({ ...f, ...next }));
+                            }}
+                            className={selectClass}
+                        >
+                            {(Object.keys(SIMPLE_STATUS_LABELS) as SimpleStatus[]).map((k) => (
+                                <option key={k} value={k}>{SIMPLE_STATUS_LABELS[k]}</option>
+                            ))}
+                        </Dropdown>
+                        <p className="mt-1.5 text-xs text-muted-foreground">
+                            {LIVE_SIMPLE_STATUSES.includes(toSimpleStatus(form)) ? 'Shown on the site.' : 'Hidden from the site, kept on record.'}
+                        </p>
+                        <ErrorText name="status" />
+                    </div>
+                    {toSimpleStatus(form) === 'DRAFT' && (
+                        <div>
+                            <Label htmlFor="pf-listing_type">Will be listed</Label>
+                            <Dropdown {...text('listing_type')} className={selectClass}>
+                                <option value="SALE">For sale</option>
+                                <option value="RENT">For rent</option>
+                            </Dropdown>
+                        </div>
+                    )}
                     <label className="flex items-center gap-3 self-center rounded-md border p-3 cursor-pointer">
                         <input type="checkbox" checked={form.featured} onChange={(e) => set('featured', e.target.checked)} className="h-4 w-4 accent-[var(--color-green-500)]" />
                         <span>
@@ -244,12 +307,12 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                 </CardHeader>
                 <CardContent className="grid gap-4 sm:grid-cols-6">
                     <div className="sm:col-span-6">
-                        <Label htmlFor="pf-address">Street address *</Label>
+                        <Label htmlFor="pf-address">Street address <span className="text-destructive">*</span></Label>
                         <Input placeholder="1420 Ridgecrest Ln" autoComplete="street-address" {...text('address')} />
                         <ErrorText name="address" />
                     </div>
                     <div className="sm:col-span-4">
-                        <Label htmlFor="pf-city">City *</Label>
+                        <Label htmlFor="pf-city">City <span className="text-destructive">*</span></Label>
                         <Input placeholder="Lahore" {...text('city')} />
                         <ErrorText name="city" />
                     </div>
@@ -259,7 +322,7 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                         <ErrorText name="zip" />
                     </div>
                     <div className="sm:col-span-6">
-                        <Label htmlFor="pf-google_maps_url">Google Maps link</Label>
+                        <Label htmlFor="pf-google_maps_url">Google Maps link <span className="font-normal text-muted-foreground">(optional)</span></Label>
                         <Input placeholder="https://maps.google.com/…" {...text('google_maps_url')} />
                         <ErrorText name="google_maps_url" />
                     </div>
@@ -273,30 +336,46 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                 </CardHeader>
                 <CardContent className="grid gap-4 grid-cols-2 sm:grid-cols-3">
                     <div className="col-span-2 sm:col-span-1">
-                        <Label htmlFor="pf-rent_price">{priceLabel} *</Label>
-                        <Input type="number" inputMode="decimal" min={0} placeholder={form.listing_type === 'RENT' ? '3200' : '1295000'} {...text('rent_price')} />
+                        <Label htmlFor="pf-rent_price">{priceLabel} <span className="text-destructive">*</span></Label>
+                        <Input type="number" inputMode="numeric" min={0} placeholder={form.listing_type === 'RENT' ? '85000' : '35000000'} {...text('rent_price')} />
+                        {priceValue > 0 && !errors.rent_price && (
+                            <p className="mt-1 text-xs text-muted-foreground">{formatPrice(priceValue, 'PKR')}{form.listing_type === 'RENT' ? ' / month' : ''}</p>
+                        )}
                         <ErrorText name="rent_price" />
                     </div>
                     <div>
-                        <Label htmlFor="pf-sqft">Area (sq ft) *</Label>
-                        <Input type="number" inputMode="numeric" min={1} {...text('sqft')} />
+                        <Label htmlFor="pf-sqft">Area <span className="text-destructive">*</span></Label>
+                        <div className="flex gap-2">
+                            <Input {...field('sqft')} type="number" inputMode="decimal" min={0} step="any" placeholder={areaUnit === 'KANAL' ? '1' : '10'}
+                                value={areaInput} onChange={(e) => setArea(e.target.value, sqftPerUnit)}
+                                className={cn('min-w-0', errors.sqft && 'border-destructive focus-visible:ring-destructive')} />
+                            <Dropdown aria-label="Area unit" value={areaUnit} className={cn(selectClass, 'w-28 shrink-0')}
+                                onChange={(e) => {
+                                    const unit = e.target.value as 'MARLA' | 'KANAL';
+                                    setAreaUnit(unit);
+                                    setArea(areaInput, unit === 'KANAL' ? SQFT_PER_KANAL : SQFT_PER_MARLA);
+                                }}>
+                                <option value="MARLA">Marla</option>
+                                <option value="KANAL">Kanal</option>
+                            </Dropdown>
+                        </div>
                         <ErrorText name="sqft" />
                     </div>
                     <div>
-                        <Label htmlFor="pf-furnishing">Furnishing *</Label>
-                        <select {...text('furnishing')} className={selectClass}>
+                        <Label htmlFor="pf-furnishing">Furnishing <span className="text-destructive">*</span></Label>
+                        <Dropdown {...text('furnishing')} className={selectClass}>
                             {Object.entries(FURNISHING_LABELS).map(([v, l]) => (
                                 <option key={v} value={v}>{l}</option>
                             ))}
-                        </select>
+                        </Dropdown>
                     </div>
                     <div>
-                        <Label htmlFor="pf-bedrooms">Bedrooms *</Label>
+                        <Label htmlFor="pf-bedrooms">Bedrooms <span className="text-destructive">*</span></Label>
                         <Input type="number" inputMode="numeric" min={0} placeholder="0 for studio" {...text('bedrooms')} />
                         <ErrorText name="bedrooms" />
                     </div>
                     <div>
-                        <Label htmlFor="pf-bathrooms">Bathrooms *</Label>
+                        <Label htmlFor="pf-bathrooms">Bathrooms <span className="text-destructive">*</span></Label>
                         <Input type="number" inputMode="numeric" min={0} {...text('bathrooms')} />
                         <ErrorText name="bathrooms" />
                     </div>
@@ -313,21 +392,29 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
                 </CardContent>
             </Card>
 
-            {/* Description & features */}
+            {/* Description */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Description &amp; features</CardTitle>
+                    <CardTitle>Description</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent>
                     <div>
-                        <Label htmlFor="pf-description">Description *</Label>
+                        <Label htmlFor="pf-description">Description <span className="text-destructive">*</span></Label>
                         <Textarea rows={5} placeholder="What makes this property stand out?" {...text('description')} />
                         <div className="flex justify-between">
                             <ErrorText name="description" />
                             <span className="ml-auto text-xs text-muted-foreground mt-1">{form.description.length}/5000</span>
                         </div>
                     </div>
+                </CardContent>
+            </Card>
 
+            {/* Features */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Features</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
                     <div>
                         <Label htmlFor="pf-feature-input">Key features</Label>
                         <p className="text-xs text-muted-foreground mb-2">Short selling points shown as highlights, e.g. &ldquo;Ocean views&rdquo;.</p>
@@ -430,38 +517,69 @@ export default function PropertyForm({ mode, propertyId, initialValues = EMPTY_P
 
             {/* Agent */}
             <Card>
-                <CardHeader>
-                    <CardTitle>Listing agent</CardTitle>
-                    <CardDescription>Shown on the property page. Leave blank to hide the agent card.</CardDescription>
+                <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
+                    <div className="space-y-1.5">
+                        <CardTitle>Listing agent</CardTitle>
+                        <CardDescription>Shown on the property page. Turn off to hide the agent card.</CardDescription>
+                    </div>
+                    <button type="button" role="switch" aria-checked={form.has_agent} aria-label="Show a listing agent"
+                        onClick={() => {
+                            const on = !form.has_agent;
+                            set('has_agent', on);
+                            if (!on) setErrors((e) => ({ ...e, agent_name: undefined, agent_phone: undefined, agent_email: undefined, agent_photo_url: undefined }));
+                        }}
+                        className={cn('relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors', form.has_agent ? 'bg-[var(--color-green-500)]' : 'bg-input')}>
+                        <span className={cn('inline-block size-5 rounded-full bg-white shadow transition-transform', form.has_agent ? 'translate-x-[22px]' : 'translate-x-0.5')} />
+                    </button>
                 </CardHeader>
-                <CardContent className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                        <Label htmlFor="pf-agent_name">Name</Label>
-                        <Input autoComplete="off" {...text('agent_name')} />
-                        <ErrorText name="agent_name" />
-                    </div>
-                    <div>
-                        <Label htmlFor="pf-agent_phone">Phone</Label>
-                        <Input type="tel" autoComplete="off" {...text('agent_phone')} />
-                        <ErrorText name="agent_phone" />
-                    </div>
-                    <div>
-                        <Label htmlFor="pf-agent_email">Email</Label>
-                        <Input type="email" autoComplete="off" {...text('agent_email')} />
-                        <ErrorText name="agent_email" />
-                    </div>
-                    <div>
-                        <Label htmlFor="pf-agent_photo_url">Photo link</Label>
-                        <Input placeholder="https://images.unsplash.com/…" {...text('agent_photo_url')} />
-                        <ErrorText name="agent_photo_url" />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <Label htmlFor="pf-zillow_url">External listing link</Label>
-                        <Input placeholder="https://…" {...text('zillow_url')} />
-                        <ErrorText name="zillow_url" />
-                    </div>
+                {form.has_agent && (
+                    <CardContent className="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <Label htmlFor="pf-agent_name">Name <span className="text-destructive">*</span></Label>
+                            <Input autoComplete="off" {...text('agent_name')} />
+                            <ErrorText name="agent_name" />
+                        </div>
+                        <div>
+                            <Label htmlFor="pf-agent_phone">Phone <span className="text-destructive">*</span></Label>
+                            <Input type="tel" autoComplete="off" placeholder="+92 300 1234567" {...text('agent_phone')} />
+                            <ErrorText name="agent_phone" />
+                        </div>
+                        <div>
+                            <Label htmlFor="pf-agent_email">Email <span className="text-destructive">*</span></Label>
+                            <Input type="email" autoComplete="off" {...text('agent_email')} />
+                            <ErrorText name="agent_email" />
+                        </div>
+                        <div>
+                            <Label htmlFor="pf-agent_photo_url">Photo link <span className="font-normal text-muted-foreground">(optional)</span></Label>
+                            <Input placeholder="https://images.unsplash.com/…" {...text('agent_photo_url')} />
+                            <ErrorText name="agent_photo_url" />
+                        </div>
+                    </CardContent>
+                )}
+            </Card>
+
+            {/* External link */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>External listing</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Label htmlFor="pf-zillow_url">External listing link <span className="font-normal text-muted-foreground">(optional)</span></Label>
+                    <Input placeholder="https://…" {...text('zillow_url')} />
+                    <ErrorText name="zillow_url" />
                 </CardContent>
             </Card>
+
+          </div>
+
+            {/* Card preview */}
+            <aside className="hidden xl:block sticky top-6 space-y-3" aria-label="Listing card preview">
+                <p className="text-sm font-medium">Preview</p>
+                <div inert className="pointer-events-none select-none">
+                    <PropertyCard property={preview} />
+                </div>
+                <p className="text-xs text-muted-foreground">How this listing appears in search results. Updates as you type.</p>
+            </aside>
 
             {/* Sticky actions */}
             <div className="fixed bottom-0 inset-x-0 lg:left-64 z-30 border-t bg-background/95 backdrop-blur px-4 py-3">

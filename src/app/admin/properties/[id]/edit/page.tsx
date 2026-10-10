@@ -29,6 +29,7 @@ function toFormValues(p: Property): PropertyFormValues {
         description: p.description ?? '',
         amenities: p.amenities ?? [],
         features: p.features?.length ? p.features : p.highlights ?? [],
+        has_agent: Boolean(p.agent_name?.trim()),
         agent_name: str(p.agent_name),
         agent_phone: str(p.agent_phone),
         agent_email: str(p.agent_email),

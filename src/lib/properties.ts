@@ -203,3 +203,38 @@ export function getActiveFilterChips(f: PropertyFilters): FilterChip[] {
     f.amenities.forEach((a) => chips.push({ key: 'amenities', label: a, value: a }));
     return chips;
 }
+
+/*
+ * Simple status the admin works with. Maps onto (status, listing_type) so the
+ * database keeps its detailed enum: live listings are AVAILABLE, drafts UNLISTED.
+ */
+export type SimpleStatus = 'FOR_SALE' | 'FOR_RENT' | 'SOLD' | 'RENTED' | 'DRAFT';
+
+export const SIMPLE_STATUS_LABELS: Record<SimpleStatus, string> = {
+    FOR_SALE: 'For sale',
+    FOR_RENT: 'For rent',
+    SOLD: 'Sold',
+    RENTED: 'Rented',
+    DRAFT: 'Draft',
+};
+
+/** Live statuses appear on the public site; the rest are kept on record only. */
+export const LIVE_SIMPLE_STATUSES: SimpleStatus[] = ['FOR_SALE', 'FOR_RENT'];
+
+export function toSimpleStatus(p: { status: string; listing_type: string }): SimpleStatus {
+    if (p.status === 'SOLD') return 'SOLD';
+    if (p.status === 'RENTED') return 'RENTED';
+    if ((PUBLIC_STATUSES as readonly string[]).includes(p.status)) return p.listing_type === 'RENT' ? 'FOR_RENT' : 'FOR_SALE';
+    return 'DRAFT';
+}
+
+/** Database fields for a simple status. Drafts keep whatever listing type they had. */
+export function fromSimpleStatus(s: SimpleStatus, currentType: string): { status: PropertyStatus; listing_type: ListingType } {
+    switch (s) {
+        case 'FOR_SALE': return { status: 'AVAILABLE', listing_type: 'SALE' };
+        case 'FOR_RENT': return { status: 'AVAILABLE', listing_type: 'RENT' };
+        case 'SOLD': return { status: 'SOLD', listing_type: 'SALE' };
+        case 'RENTED': return { status: 'RENTED', listing_type: 'RENT' };
+        case 'DRAFT': return { status: 'UNLISTED', listing_type: currentType === 'RENT' ? 'RENT' : 'SALE' };
+    }
+}

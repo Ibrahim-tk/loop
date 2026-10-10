@@ -2,16 +2,16 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Building, CalendarClock, Eye, Plus, Star, type LucideIcon } from '@/components/admin/icons';
+import { Building, CalendarClock, CheckCircle2, Eye, Plus, Star, type LucideIcon } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon3D from '@/components/ui/Icon3D';
 import { OverviewCharts, AnalyticsCharts } from '@/components/admin/DashboardCharts';
-import { formatListingPrice, LISTING_TYPE_LABELS } from '@/lib/properties';
+import { formatListingPrice, LISTING_TYPE_LABELS, SIMPLE_STATUS_LABELS, LIVE_SIMPLE_STATUSES, toSimpleStatus, type SimpleStatus } from '@/lib/properties';
 import { formatSlot, formatViewingDate, toDateKey } from '@/lib/viewings';
-import type { ListingType } from '@/lib/types';
+import type { ListingType, PropertyStatus } from '@/lib/types';
 
 interface PropertyRow {
     id: string;
@@ -23,6 +23,7 @@ interface PropertyRow {
     view_count: number;
     click_count: number;
     created_at: string;
+    status: PropertyStatus;
 }
 interface LeadRow {
     id: string;
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
         const today = toDateKey(new Date());
 
         const [props, leads, leadCount, viewings, pendingCount, leadDates] = await Promise.all([
-            supabase.from('properties').select('id, title, city, featured, listing_type, rent_price, view_count, click_count, created_at').order('created_at', { ascending: false }),
+            supabase.from('properties').select('id, title, city, featured, listing_type, rent_price, view_count, click_count, created_at, status').order('created_at', { ascending: false }),
             supabase.from('leads').select('id, name, message, created_at, property:properties(id, title)').order('created_at', { ascending: false }).limit(5),
             supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', startOfMonth),
             supabase.from('viewings').select('id, name, viewing_date, time_slot, status, property:properties(id, title)').gte('viewing_date', today).neq('status', 'CANCELLED').order('viewing_date').order('time_slot').limit(5),
@@ -137,10 +138,15 @@ export default function AdminDashboard() {
     const props = data?.properties ?? [];
     const count = (fn: (p: PropertyRow) => boolean) => props.filter(fn).length;
     
-    const statusChart = [
-        { name: 'For sale', value: count((p) => p.listing_type === 'SALE') },
-        { name: 'For rent', value: count((p) => p.listing_type === 'RENT') },
-    ].filter((d) => d.value > 0);
+    // Every property by simple status, including sold/rented history that never shows publicly
+    const statusChart = (Object.keys(SIMPLE_STATUS_LABELS) as SimpleStatus[])
+        .map((st) => ({
+            status: st,
+            name: SIMPLE_STATUS_LABELS[st],
+            value: count((p) => toSimpleStatus(p) === st),
+            live: LIVE_SIMPLE_STATUSES.includes(st),
+        }))
+        .filter((d) => d.value > 0);
 
     // Last 6 calendar months, zero-filled so the trend line is continuous.
     const leadCounts = (data?.leadDates ?? []).reduce<Record<string, number>>((acc, iso) => {
@@ -163,7 +169,7 @@ export default function AdminDashboard() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-                    <p className="text-muted-foreground">Your catalogue, inquiries and viewings at a glance.</p>
+                    <p className="text-muted-foreground">Your catalogue, inquiries and appointments at a glance.</p>
                 </div>
                 <Button asChild size="sm">
                     <Link href="/admin/properties/new"><Plus className="h-4 w-4" /> Add property</Link>
@@ -184,11 +190,12 @@ export default function AdminDashboard() {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
-                    <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
-                        <StatCard title="Total properties" value={props.length} hint={`${count((p) => p.listing_type === 'SALE')} for sale · ${count((p) => p.listing_type === 'RENT')} for rent`} icon={Building} href="/admin/properties" loading={loading} />
+                    <div className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                        <StatCard title="Total properties" value={props.length} hint={`${count((p) => toSimpleStatus(p) === 'FOR_SALE')} for sale · ${count((p) => toSimpleStatus(p) === 'FOR_RENT')} for rent`} icon={Building} href="/admin/properties" loading={loading} />
                         <StatCard title="Total views" value={props.reduce((n, p) => n + (p.view_count || 0), 0)} hint="Across all listings" icon={Eye} href="/admin/properties" loading={loading} />
                         <StatCard title="Featured" value={count((p) => p.featured)} hint="Shown first on the site" icon={Star} href="/admin/properties" loading={loading} />
-                        <StatCard title="Viewings to confirm" value={data?.pendingViewings ?? 0} hint="Upcoming, still pending" icon={CalendarClock} href="/admin/viewings" loading={loading} />
+                        <StatCard title="Sold" value={count((p) => p.status === 'SOLD')} hint="Off the site, kept on record" icon={CheckCircle2} href="/admin/properties" loading={loading} />
+                        <StatCard title="Appointments to confirm" value={data?.pendingViewings ?? 0} hint="Upcoming, still pending" icon={CalendarClock} href="/admin/viewings" loading={loading} />
                     </div>
 
                     <div className="grid gap-4 lg:grid-cols-3">
@@ -219,7 +226,7 @@ export default function AdminDashboard() {
                             ))}
                         </ListCard>
 
-                        <ListCard title="Upcoming viewings" href="/admin/viewings" linkLabel="All viewings" empty={<div className="flex flex-1 flex-col items-center justify-center gap-3 py-8 text-center"><Icon3D name="calendar" size={88} /><p className="text-sm text-muted-foreground">No upcoming viewings.</p></div>} loading={loading}>
+                        <ListCard title="Upcoming appointments" href="/admin/viewings" linkLabel="All appointments" empty={<div className="flex flex-1 flex-col items-center justify-center gap-3 py-8 text-center"><Icon3D name="calendar" size={88} /><p className="text-sm text-muted-foreground">No upcoming appointments.</p></div>} loading={loading}>
                             {(data?.upcomingViewings ?? []).map((v) => (
                                 <li key={v.id} className="py-3 flex items-center justify-between gap-3">
                                     <div className="min-w-0">

@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { usePrefs } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import { CaretDown, MagnifyingGlass } from '@phosphor-icons/react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import HeroVideo from '@/components/landing/HeroVideo';
 import { DEFAULT_FILTERS, filtersToParams, PROPERTY_TYPE_LABELS } from '@/lib/properties';
 import type { ListingType, PropertyType } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import Dropdown from '@/components/ui/Dropdown';
 
 const PRICE_STEPS: Record<ListingType, number[]> = {
     RENT: [75000, 150000, 250000, 400000, 650000],
@@ -23,7 +24,7 @@ const TABS: { value: ListingType | ''; label: string }[] = [
 
 // Underlined select with a custom caret, like a form line in a printed brochure
 const selectClass =
-    'peer h-10 w-full appearance-none bg-transparent pr-7 border-0 border-b border-dashed border-[var(--outline-default)] text-[length:var(--typeface-paragraph-text)] text-[color:var(--on-surface-default)] cursor-pointer transition-colors hover:border-[var(--on-surface-variant)] focus:outline-none focus:border-solid focus:border-[var(--action-primary)] disabled:cursor-not-allowed disabled:text-[color:var(--text-tertiary)]';
+    'h-10 w-full bg-transparent px-0 border-0 border-b border-dashed border-[var(--outline-default)] text-[length:var(--typeface-paragraph-text)] text-[color:var(--on-surface-default)] cursor-pointer transition-colors hover:border-[var(--on-surface-variant)] focus-visible:ring-0 data-[state=open]:border-solid data-[state=open]:border-[var(--color-green-500)] disabled:cursor-not-allowed disabled:text-[color:var(--text-tertiary)]';
 
 function Field({ label, id, className, children }: { label: string; id: string; className?: string; children: React.ReactNode }) {
     return (
@@ -33,8 +34,6 @@ function Field({ label, id, className, children }: { label: string; id: string; 
             </label>
             <div className="relative">
                 {children}
-                <CaretDown size={16} aria-hidden="true"
-                    className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-[color:var(--on-surface-variant)]" />
             </div>
         </div>
     );
@@ -106,31 +105,31 @@ export default function LandingSearchHero({ cities, types }: LandingSearchHeroPr
                     <div className="bg-[var(--surface-default)] rounded-[12px] p-5 sm:p-6 shadow-[0_10px_40px_rgba(0,0,0,0.14)]">
                         <div className="grid grid-cols-2 lg:grid-cols-[1.3fr_1fr_0.8fr_1.1fr_auto] gap-x-6 gap-y-5 items-end">
                             <Field label="Location" id="hs-city" className="col-span-2 lg:col-span-1">
-                                <select id="hs-city" value={city} onChange={(e) => setCity(e.target.value)} className={selectClass}>
+                                <Dropdown id="hs-city" value={city} onChange={(e) => setCity(e.target.value)} className={selectClass}>
                                     <option value="">All areas</option>
                                     {cities.map((c) => <option key={c} value={c}>{c}</option>)}
-                                </select>
+                                </Dropdown>
                             </Field>
                             <Field label="Property type" id="hs-type">
-                                <select id="hs-type" value={type} onChange={(e) => setType(e.target.value as PropertyType | '')} className={selectClass}>
+                                <Dropdown id="hs-type" value={type} onChange={(e) => setType(e.target.value as PropertyType | '')} className={selectClass}>
                                     <option value="">Any</option>
                                     {types.map((t) => <option key={t} value={t}>{PROPERTY_TYPE_LABELS[t]}</option>)}
-                                </select>
+                                </Dropdown>
                             </Field>
                             <Field label="Bedrooms" id="hs-beds">
-                                <select id="hs-beds" value={beds} onChange={(e) => setBeds(e.target.value)} className={selectClass}>
+                                <Dropdown id="hs-beds" value={beds} onChange={(e) => setBeds(e.target.value)} className={selectClass}>
                                     <option value="">Any</option>
                                     {[1, 2, 3, 4].map((n) => <option key={n} value={n}>{n}+</option>)}
-                                </select>
+                                </Dropdown>
                             </Field>
                             <Field label="Max price" id="hs-price" className="col-span-2 lg:col-span-1">
-                                <select id="hs-price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
+                                <Dropdown id="hs-price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
                                     disabled={!listing} title={listing ? undefined : 'Choose Buy or Rent to set a price'} className={selectClass}>
                                     <option value="">{listing ? 'Any' : 'Pick Buy or Rent'}</option>
                                     {listing && PRICE_STEPS[listing].map((p) => (
                                         <option key={p} value={p}>Up to {formatPrice(p)}{listing === 'RENT' ? '/mo' : ''}</option>
                                     ))}
-                                </select>
+                                </Dropdown>
                             </Field>
                             <button
                                 type="submit"

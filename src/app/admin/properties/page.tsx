@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Plus, Building, Search, Eye, Trash2, Pencil, Star, ExternalLink, Loader2, X } from '@/components/admin/icons';
+import { Plus, Search, Eye, Trash2, Pencil, Star, ExternalLink, Loader2 } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { deleteProperty as deletePropertyAction, updateProperty } from '@/lib/actions/properties';
 import { Property } from '@/lib/types';
@@ -11,12 +11,14 @@ import { formatListingPrice, LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS } from '@
 import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Icon3D from '@/components/ui/Icon3D';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useAdminTheme } from '@/components/admin/AdminThemeProvider';
+import Dropdown from '@/components/ui/Dropdown';
 
 const selectClass =
-    'h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
+    'h-9 w-full sm:w-44 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
 
 export default function AdminPropertiesPage() {
     const [properties, setProperties] = useState<Property[]>([]);
@@ -126,24 +128,19 @@ export default function AdminPropertiesPage() {
                         className="h-9 w-full rounded-md border border-input bg-transparent pl-9 pr-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     />
                 </div>
-                <select aria-label="Listing type" value={listing} onChange={(e) => setListing(e.target.value)} className={selectClass}>
+                <Dropdown aria-label="Listing type" value={listing} onChange={(e) => setListing(e.target.value)} className={selectClass}>
                     <option value="">Sale &amp; rent</option>
                     <option value="SALE">For sale</option>
                     <option value="RENT">For rent</option>
-                </select>
-                <select aria-label="Property type" value={type} onChange={(e) => setType(e.target.value)} className={selectClass}>
+                </Dropdown>
+                <Dropdown aria-label="Property type" value={type} onChange={(e) => setType(e.target.value)} className={selectClass}>
                     <option value="">All types</option>
                     {Object.entries(PROPERTY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                </select>
+                </Dropdown>
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input type="checkbox" checked={featuredOnly} onChange={(e) => setFeaturedOnly(e.target.checked)} className="h-4 w-4" />
                     Featured only
                 </label>
-                {hasFilters && (
-                    <Button variant="ghost" size="sm" onClick={clearFilters}>
-                        <X className="h-4 w-4" /> Clear
-                    </Button>
-                )}
             </div>
 
             <Card>
@@ -159,7 +156,7 @@ export default function AdminPropertiesPage() {
                         </div>
                     ) : filtered.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground space-y-3">
-                            <Building className="h-12 w-12 mx-auto opacity-30" />
+                            <Icon3D name={hasFilters ? 'search' : 'house'} size={88} className="mx-auto" />
                             <p>{hasFilters ? 'No properties match these filters.' : 'No properties yet.'}</p>
                             {hasFilters ? (
                                 <Button variant="outline" size="sm" onClick={clearFilters}>Clear filters</Button>

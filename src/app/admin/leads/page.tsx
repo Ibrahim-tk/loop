@@ -1,19 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MessageSquare, Mail, Phone, Building, Calendar, Eye, Trash2, Clock, Search, Copy } from '@/components/admin/icons';
+import { Mail, Phone, Building, Calendar, Eye, Trash2, Clock, Search, Copy } from '@/components/admin/icons';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Icon3D from '@/components/ui/Icon3D';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { deleteLead } from '@/lib/actions/leads';
 import { useAdminTheme } from '@/components/admin/AdminThemeProvider';
+import Dropdown from '@/components/ui/Dropdown';
 
 function getTypeBadge(type: string) {
     const colors: Record<string, string> = { 
@@ -117,7 +119,7 @@ export default function AdminLeadsPage() {
                             className="w-full bg-background pl-8"
                         />
                     </div>
-                    <select
+                    <Dropdown
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value)}
                         className="h-9 w-full sm:w-auto rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -127,7 +129,7 @@ export default function AdminLeadsPage() {
                         <option value="TENANT">Tenant</option>
                         <option value="RENOVATION">Renovation</option>
                         <option value="ANALYSIS">Rental Analysis</option>
-                    </select>
+                    </Dropdown>
                 </div>
             </div>
 
@@ -139,7 +141,7 @@ export default function AdminLeadsPage() {
                         </div>
                     ) : filteredLeads.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
-                            <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                            <Icon3D name="search" size={88} className="mx-auto mb-4" />
                             <p>No leads found</p>
                         </div>
                     ) : (

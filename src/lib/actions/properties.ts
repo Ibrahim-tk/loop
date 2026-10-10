@@ -141,7 +141,9 @@ export async function saveProperty(values: PropertyFormValues, id?: string): Pro
     if (!parsed.success) {
         return { ok: false, error: 'Some fields need attention.', fieldErrors: toFieldErrors(parsed.error) };
     }
-    const record = { ...parsed.data, highlights: parsed.data.features };
+    const { has_agent, ...fields } = parsed.data;
+    const agent = has_agent ? {} : { agent_name: '', agent_phone: '', agent_email: '', agent_photo_url: '' };
+    const record = { ...fields, ...agent, highlights: fields.features };
 
     const query = id
         ? supabase.from('properties').update(record).eq('id', id).select('id').maybeSingle()
