@@ -540,7 +540,7 @@ export default function PropertyDetailClient({
                                                 <span className="text-[length:var(--typeface-paragraph-text)] font-light text-[color:var(--on-surface-variant)] leading-6 truncate">
                                                     {stat.label}
                                                 </span>
-                                                <span className="text-[length:var(--typeface-heading-h3)] font-normal text-[color:var(--on-surface-default)] leading-8">
+                                                <span className="text-[length:var(--typeface-heading-h5)] font-normal text-[color:var(--on-surface-default)] leading-7">
                                                     {stat.value}
                                                 </span>
                                             </div>
