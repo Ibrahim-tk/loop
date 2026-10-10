@@ -54,7 +54,6 @@ const STATIC_COLUMNS: { title: string; links: FooterLink[] }[] = [
             { label: 'Newest listings', href: search({ sort: 'newest' }) },
             { label: 'About us', href: '/about' },
             { label: 'Contact us', href: '/contact' },
-            { label: 'Free rental analysis', href: '/rental-analysis' },
             { label: 'Saved homes', href: '/favourites' },
         ],
     },

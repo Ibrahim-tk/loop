@@ -1,5 +1,5 @@
 -- ============================================
--- Blue Pillar Management — Database Schema
+-- Fasana Homes — Database Schema
 -- Run this in your Supabase SQL Editor
 -- ============================================
 

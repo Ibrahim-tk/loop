@@ -1,6 +1,6 @@
 -- ===== 20260214000000_initial_schema.sql =====
 -- ============================================
--- Blue Pillar Management — Initial Schema
+-- Fasana Homes — Initial Schema
 -- ============================================
 
 -- Enable UUID extension

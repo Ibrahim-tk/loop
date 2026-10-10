@@ -1,5 +1,5 @@
 -- ============================================
--- Blue Pillar Management — Initial Schema
+-- Fasana Homes — Initial Schema
 -- ============================================
 
 -- Enable UUID extension

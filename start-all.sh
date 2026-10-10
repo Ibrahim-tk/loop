@@ -1,8 +1,8 @@
 #!/bin/bash
-# Blue Pillar Management — Full Development Environment
+# Fasana Homes — Full Development Environment
 # Usage: ./start-all.sh
 
-echo "🏢 Blue Pillar Management — Full Dev Environment"
+echo "🏢 Fasana Homes — Full Dev Environment"
 echo "================================================="
 
 # Check if node_modules exists

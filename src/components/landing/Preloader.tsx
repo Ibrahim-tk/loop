@@ -82,7 +82,7 @@ export default function Preloader() {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={pct}
-            className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[var(--color-green-500)] transition-transform duration-[900ms] ease-[cubic-bezier(0.83,0,0.17,1)] ${done ? '-translate-y-full pointer-events-none' : 'translate-y-0'}`}
+            className={`fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[var(--color-green-500)] transition-transform [transition-duration:900ms] [transition-timing-function:cubic-bezier(0.83,0,0.17,1)] ${done ? '-translate-y-full pointer-events-none' : 'translate-y-0'}`}
         >
             <div className="relative select-none whitespace-nowrap font-[family-name:var(--font-bricolage-loaded)] font-semibold leading-none tracking-[-0.04em] text-[clamp(96px,26vw,560px)]">
                 {/* Dull base */}

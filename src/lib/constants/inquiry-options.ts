@@ -9,7 +9,6 @@ export interface InquiryOption {
 
 export const INQUIRY_OPTIONS: InquiryOption[] = [
     { label: 'Property Management', leadType: 'OWNER', badgeColor: '#0A3161', badgeBg: '#E8EDF4' },
-    { label: 'Rental Analysis', leadType: 'ANALYSIS', badgeColor: '#4f46e5', badgeBg: '#e0e7ff' },
     { label: 'Leasing Inquiry', leadType: 'TENANT', badgeColor: '#15803d', badgeBg: '#E8F5EC' },
     { label: 'Renovation Services', leadType: 'RENOVATION', badgeColor: '#d97706', badgeBg: '#FEF3E2' },
     { label: 'List Your Property', leadType: 'OWNER', badgeColor: '#0369a1', badgeBg: '#f0f9ff' },

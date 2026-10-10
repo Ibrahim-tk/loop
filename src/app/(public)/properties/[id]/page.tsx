@@ -1,4 +1,5 @@
 import { PUBLIC_STATUSES } from '@/lib/properties';
+import { formatPrice } from '@/lib/utils';
 import { cache } from 'react';
 import { createPublicClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${property.title} | ${property.city}`,
         description:
             property.description ||
-            `${property.title} in ${property.city} — $${property.rent_price?.toLocaleString()}${property.listing_type === 'RENT' ? '/month' : ''}. Professionally managed by Fasana Homes.`,
+            `${property.title} in ${property.city} — ${formatPrice(property.rent_price || 0, 'PKR')}${property.listing_type === 'RENT' ? '/month' : ''}. Professionally managed by Fasana Homes.`,
     };
 }
 

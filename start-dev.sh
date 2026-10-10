@@ -1,8 +1,8 @@
 #!/bin/bash
-# Blue Pillar Management — Development Server
+# Fasana Homes — Development Server
 # Usage: ./start-dev.sh
 
-echo "🏢 Blue Pillar Management — Starting Dev Server..."
+echo "🏢 Fasana Homes — Starting Dev Server..."
 echo "=================================================="
 
 # Check if node_modules exists
