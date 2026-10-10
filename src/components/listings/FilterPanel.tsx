@@ -8,11 +8,9 @@ import {
     AMENITY_OPTIONS,
     FURNISHING_LABELS,
     PROPERTY_TYPE_LABELS,
-    PUBLIC_STATUSES,
-    STATUS_LABELS,
     type PropertyFilters,
 } from '@/lib/properties';
-import type { Furnishing, ListingType, PropertyStatus, PropertyType } from '@/lib/types';
+import type { Furnishing, ListingType, PropertyType } from '@/lib/types';
 
 interface FilterPanelProps {
     filters: PropertyFilters;
@@ -63,7 +61,7 @@ export default function FilterPanel({ filters, cities, resultCount, setFilter, t
     };
 
     const advancedCount =
-        [filters.minPrice, filters.maxPrice, filters.beds, filters.baths, filters.minArea, filters.furnishing, filters.status].filter(Boolean).length +
+        [filters.minPrice, filters.maxPrice, filters.beds, filters.baths, filters.minArea, filters.furnishing].filter(Boolean).length +
         filters.amenities.length;
 
     const cityOptions = cities.map((c) => ({ label: c, value: c }));
@@ -228,12 +226,6 @@ export default function FilterPanel({ filters, cities, resultCount, setFilter, t
                                         <label className={fieldLabel} htmlFor="f-furnishing">Furnishing</label>
                                         <PublicSelect id="f-furnishing" placeholder="Any" value={filters.furnishing} options={toOptions(FURNISHING_LABELS)}
                                             onChange={(e) => setFilter('furnishing', e.target.value as Furnishing)} onClear={() => setFilter('furnishing', '')} />
-                                    </div>
-                                    <div>
-                                        <label className={fieldLabel} htmlFor="f-status">Status</label>
-                                        <PublicSelect id="f-status" placeholder="Any" value={filters.status}
-                                            options={PUBLIC_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s]! }))}
-                                            onChange={(e) => setFilter('status', e.target.value as PropertyStatus)} onClear={() => setFilter('status', '')} />
                                     </div>
                                 </div>
 

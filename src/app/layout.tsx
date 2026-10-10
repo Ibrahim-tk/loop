@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Archivo, Bricolage_Grotesque, Instrument_Serif, Pragati_Narrow } from 'next/font/google';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import { AppToaster } from '@/components/ui/AppToaster';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
@@ -114,6 +115,7 @@ export default function RootLayout({
                     </defs>
                 </svg>
                 <AppToaster />
+                <ScrollReveal />
                 {children}
             </body>
         </html>

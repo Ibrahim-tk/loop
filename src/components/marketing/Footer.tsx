@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { createPublicClient } from '@/lib/supabase/server';
+import { PUBLIC_STATUSES } from '@/lib/properties';
 import { SQFT_PER_KANAL, SQFT_PER_MARLA } from '@/lib/utils';
 import WhatsappIcon from '@/components/ui/WhatsappIcon';
 
@@ -9,7 +10,7 @@ const MAX_CITIES = 6;
 type FooterLink = { label: string; href: string };
 
 const search = (params: Record<string, string | number>) =>
-    `/rentals?${new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString()}`;
+    `/properties?${new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString()}`;
 
 const STATIC_COLUMNS: { title: string; links: FooterLink[] }[] = [
     {
@@ -48,7 +49,7 @@ const STATIC_COLUMNS: { title: string; links: FooterLink[] }[] = [
     {
         title: 'Company',
         links: [
-            { label: 'All properties', href: '/rentals' },
+            { label: 'All properties', href: '/properties' },
             { label: 'Newest listings', href: search({ sort: 'newest' }) },
             { label: 'About us', href: '/about' },
             { label: 'Contact us', href: '/contact' },
@@ -66,7 +67,7 @@ async function getTopCities(): Promise<FooterLink[]> {
     const { data } = await createPublicClient()
         .from('properties')
         .select('city')
-        .in('status', ['AVAILABLE', 'PENDING', 'RENTED', 'SOLD', 'SHOWCASE']);
+        .in('status', PUBLIC_STATUSES);
     const counts = new Map<string, number>();
     (data ?? []).forEach(({ city }: { city: string | null }) => {
         if (city) counts.set(city, (counts.get(city) ?? 0) + 1);
@@ -124,7 +125,7 @@ export default async function Footer() {
                         </p>
                         <div className="flex flex-col gap-4">
                             <Link
-                                href="/rentals"
+                                href="/properties"
                                 className="group w-fit inline-flex items-center gap-4 h-12 pl-5 pr-1.5 rounded-[8px] bg-[var(--action-primary)] text-white text-[length:var(--typeface-paragraph-text-s)] font-medium hover:bg-[var(--action-primary-hover)] transition-colors"
                             >
                                 Browse properties
@@ -156,7 +157,7 @@ export default async function Footer() {
                 {/* Bottom bar */}
                 <div className="mt-14 pt-6 border-t border-[var(--outline-default)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-[length:var(--typeface-paragraph-text-xs)] text-[color:var(--on-surface-variant)]">
                     <div className="flex flex-wrap gap-x-6 gap-y-2">
-                        <Link href="/rentals" className="hover:text-[color:var(--on-surface-default)]">Properties</Link>
+                        <Link href="/properties" className="hover:text-[color:var(--on-surface-default)]">Properties</Link>
                         <Link href="/about" className="hover:text-[color:var(--on-surface-default)]">About</Link>
                         <Link href="/contact" className="hover:text-[color:var(--on-surface-default)]">Contact</Link>
                     </div>

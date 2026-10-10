@@ -27,16 +27,12 @@ export const FURNISHING_LABELS: Record<Furnishing, string> = {
     UNFURNISHED: 'Unfurnished',
 };
 
-/** Statuses shown on the public site, in filter order. */
-export const PUBLIC_STATUSES = ['AVAILABLE', 'PENDING', 'RENTED', 'SOLD'] as const satisfies readonly PropertyStatus[];
-
-export const STATUS_LABELS: Partial<Record<PropertyStatus, string>> = {
-    AVAILABLE: 'Available',
-    PENDING: 'Pending',
-    RENTED: 'Rented',
-    SOLD: 'Sold',
-    SHOWCASE: 'Showcase',
-};
+/**
+ * Statuses that are still on the market and may appear on the public site.
+ * Sold, rented and unlisted properties are never shown publicly — the only status
+ * a visitor sees is the listing type ("For sale" / "For rent").
+ */
+export const PUBLIC_STATUSES = ['AVAILABLE', 'PENDING', 'SHOWCASE'] as const satisfies readonly PropertyStatus[];
 
 export const AMENITY_OPTIONS = [
     'Pool', 'Gym', 'Garden', 'Garage', 'Balcony', 'Fireplace', 'Security', 'Concierge',
@@ -56,15 +52,9 @@ export function formatListingPrice(property: Pick<Property, 'rent_price' | 'list
     };
 }
 
-/** Badge text for a card: sold/rented/pending win over the listing type. */
-export function getListingBadge(property: Pick<Property, 'status' | 'listing_type'>) {
-    switch (property.status) {
-        case 'SOLD': return 'Sold';
-        case 'RENTED': return 'Rented';
-        case 'PENDING': return 'Pending';
-        case 'SHOWCASE': return 'Showcase';
-        default: return LISTING_TYPE_LABELS[property.listing_type] ?? 'Available';
-    }
+/** Public status label — always "For sale" or "For rent". */
+export function getListingBadge(property: Pick<Property, 'listing_type'>) {
+    return LISTING_TYPE_LABELS[property.listing_type];
 }
 
 export function formatArea(sqft: number) {
@@ -96,7 +86,6 @@ export interface PropertyFilters {
     baths: string;
     minArea: string;
     furnishing: Furnishing | '';
-    status: PropertyStatus | '';
     amenities: string[];
     sort: SortKey;
 }
@@ -112,7 +101,6 @@ export const DEFAULT_FILTERS: PropertyFilters = {
     baths: '',
     minArea: '',
     furnishing: '',
-    status: '',
     amenities: [],
     sort: 'featured',
 };
@@ -135,7 +123,6 @@ export function filtersFromParams(params: URLSearchParams): PropertyFilters {
         baths: params.get('baths') ?? '',
         minArea: params.get('minArea') ?? '',
         furnishing: (params.get('furnishing') as Furnishing) ?? '',
-        status: (params.get('status') as PropertyStatus) ?? '',
         amenities: params.get('amenities')?.split(',').filter(Boolean) ?? [],
         sort: sort && sort in SORT_OPTIONS ? sort : 'featured',
     };
@@ -174,7 +161,6 @@ export function applyFilters(properties: Property[], f: PropertyFilters): Proper
         if (baths !== null && p.bathrooms < baths) return false;
         if (minArea !== null && p.sqft < minArea) return false;
         if (f.furnishing && p.furnishing !== f.furnishing) return false;
-        if (f.status && p.status !== f.status) return false;
         if (f.amenities.length && !f.amenities.every((a) => p.amenities?.includes(a))) return false;
         return true;
     });
@@ -214,7 +200,6 @@ export function getActiveFilterChips(f: PropertyFilters): FilterChip[] {
     if (f.baths) chips.push({ key: 'baths', label: `${f.baths}+ baths` });
     if (f.minArea) chips.push({ key: 'minArea', label: `${Number(f.minArea).toLocaleString()}+ sq ft` });
     if (f.furnishing) chips.push({ key: 'furnishing', label: FURNISHING_LABELS[f.furnishing] });
-    if (f.status) chips.push({ key: 'status', label: STATUS_LABELS[f.status] ?? f.status });
     f.amenities.forEach((a) => chips.push({ key: 'amenities', label: a, value: a }));
     return chips;
 }

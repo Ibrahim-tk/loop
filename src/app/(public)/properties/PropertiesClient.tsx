@@ -17,12 +17,12 @@ import ActiveFilterChips from '@/components/listings/ActiveFilterChips';
 
 const PAGE_SIZE = 9;
 
-interface RentalsClientProps {
+interface PropertiesClientProps {
     properties: Property[];
     loadError?: boolean;
 }
 
-export default function RentalsClient({ properties, loadError = false }: RentalsClientProps) {
+export default function PropertiesClient({ properties, loadError = false }: PropertiesClientProps) {
     usePrefs(); // re-render when currency / area unit changes
     const { filters, setFilter, toggleAmenity, removeChip, clearAll } = usePropertyFilters();
     const [page, setPage] = useState(1);

@@ -9,7 +9,7 @@ import { useSavedHydrated, useSavedProperties } from '@/stores/savedProperties';
 
 const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/rentals', label: 'Properties' },
+    { href: '/properties', label: 'Properties' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
 ];

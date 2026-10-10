@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Only run auth checks for routes that actually need them.
-    // Public pages (/, /rentals, /about, /contact) skip the
+    // Public pages (/, /properties, /about, /contact) skip the
     // Supabase getUser() network call entirely — this was the #1 source of
     // navigation lag because it blocked every single route transition.
     const needsAuth = pathname.startsWith('/admin') || pathname === '/login';

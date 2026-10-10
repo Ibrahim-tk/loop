@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle, MagnifyingGlass, SpinnerGap } from '@phosphor-icons/react';
 import Modal from '@/components/ui/Modal';
 import { createClient } from '@/lib/supabase/client';
-import { formatArea, formatListingPrice } from '@/lib/properties';
+import { formatArea, formatListingPrice, PUBLIC_STATUSES } from '@/lib/properties';
 import { usePrefs } from '@/lib/store';
 import { useSavedProperties } from '@/stores/savedProperties';
 import { cn } from '@/lib/utils';
@@ -14,8 +14,16 @@ import type { Property } from '@/lib/types';
 
 type Option = Pick<Property, 'id' | 'title' | 'city' | 'rent_price' | 'listing_type' | 'sqft' | 'bedrooms' | 'bathrooms' | 'property_images'>;
 
-/** Pick one other listing, then open the side-by-side comparison with the current one. */
-export default function CompareModal({ open, onOpenChange, current }: { open: boolean; onOpenChange: (o: boolean) => void; current: Pick<Property, 'id' | 'title'> }) {
+/**
+ * Pick one other listing to compare. With `current`, starts a fresh comparison against it and opens /compare;
+ * without it (on the compare page), adds the picked listing to the existing comparison, skipping `exclude`.
+ */
+export default function CompareModal({ open, onOpenChange, current, exclude = [] }: {
+    open: boolean;
+    onOpenChange: (o: boolean) => void;
+    current?: Pick<Property, 'id' | 'title'>;
+    exclude?: string[];
+}) {
     usePrefs(); // prices follow the visitor's currency / area unit
     const router = useRouter();
     const clearCompare = useSavedProperties((s) => s.clearCompare);
@@ -29,18 +37,27 @@ export default function CompareModal({ open, onOpenChange, current }: { open: bo
         createClient()
             .from('properties')
             .select('id, title, city, rent_price, listing_type, sqft, bedrooms, bathrooms, property_images(storage_url, display_order)')
-            .in('status', ['AVAILABLE', 'PENDING', 'SHOWCASE'])
-            .neq('id', current.id)
+            .in('status', PUBLIC_STATUSES)
             .order('featured', { ascending: false })
             .then(({ data }) => setOptions((data as Option[]) ?? []));
-    }, [open, options, current.id]);
+    }, [open, options]);
+
+    useEffect(() => {
+        if (open) setSelected('');
+    }, [open]);
 
     const visible = useMemo(() => {
         const q = query.trim().toLowerCase();
-        return (options ?? []).filter((o) => !q || `${o.title} ${o.city}`.toLowerCase().includes(q));
-    }, [options, query]);
+        const skip = new Set([...exclude, ...(current ? [current.id] : [])]);
+        return (options ?? []).filter((o) => !skip.has(o.id) && (!q || `${o.title} ${o.city}`.toLowerCase().includes(q)));
+    }, [options, query, exclude, current]);
 
     const compareNow = () => {
+        if (!current) {
+            toggleCompare(selected);
+            onOpenChange(false);
+            return;
+        }
         clearCompare();
         toggleCompare(current.id);
         toggleCompare(selected);
@@ -49,7 +66,8 @@ export default function CompareModal({ open, onOpenChange, current }: { open: bo
     };
 
     return (
-        <Modal open={open} onOpenChange={onOpenChange} size="lg" title="Compare with another property" description={`Pick a listing to see side by side with ${current.title}.`}>
+        <Modal open={open} onOpenChange={onOpenChange} size="lg" title={current ? 'Compare with another property' : 'Add a property to compare'}
+            description={current ? `Pick a listing to see side by side with ${current.title}.` : 'Pick a listing to add to the comparison.'}>
             <div className="flex flex-col gap-4">
                 <label className="relative block">
                     <MagnifyingGlass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-secondary)]" />
@@ -111,7 +129,7 @@ export default function CompareModal({ open, onOpenChange, current }: { open: bo
                         Cancel
                     </button>
                     <button type="button" disabled={!selected} onClick={compareNow} className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed">
-                        Compare side by side
+                        {current ? 'Compare side by side' : 'Add to comparison'}
                     </button>
                 </div>
             </div>

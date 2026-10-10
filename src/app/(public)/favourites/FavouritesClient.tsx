@@ -76,7 +76,7 @@ export default function FavouritesClient() {
                         <p className="max-w-[420px] text-[color:var(--text-secondary)]">
                             Tap the heart on any property to keep it here and come back to it later.
                         </p>
-                        <Link href="/rentals" className="btn-primary mt-2">Browse properties</Link>
+                        <Link href="/properties" className="btn-primary mt-2">Browse properties</Link>
                     </div>
                 ) : (
                     <PropertyGrid properties={properties} />

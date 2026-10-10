@@ -152,7 +152,7 @@ export default function AdminViewingsPage() {
                                                 </TableCell>
                                                 <TableCell className="min-w-[180px]">
                                                     {r.property ? (
-                                                        <Link href={`/rentals/${r.property.id}`} target="_blank" className="text-sm hover:underline">{r.property.title}</Link>
+                                                        <Link href={`/properties/${r.property.id}`} target="_blank" className="text-sm hover:underline">{r.property.title}</Link>
                                                     ) : (
                                                         <span className="text-sm text-muted-foreground">Deleted property</span>
                                                     )}

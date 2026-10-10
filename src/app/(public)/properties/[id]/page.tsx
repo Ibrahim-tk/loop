@@ -1,3 +1,4 @@
+import { PUBLIC_STATUSES } from '@/lib/properties';
 import { cache } from 'react';
 import { createPublicClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
@@ -18,6 +19,7 @@ const getPropertyById = cache(async (id: string) => {
         .from('properties')
         .select('*, property_images(*)')
         .eq('id', id)
+        .in('status', PUBLIC_STATUSES)
         .single();
 
     if (error) return null;
@@ -47,7 +49,7 @@ export default async function PropertyDetailPage({ params }: Props) {
             .from('properties')
             .select('*, property_images(*)')
             .neq('id', id)
-            .in('status', ['AVAILABLE', 'PENDING'])
+            .in('status', PUBLIC_STATUSES)
             .limit(5),
     ]);
 

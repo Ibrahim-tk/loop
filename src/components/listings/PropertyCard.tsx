@@ -50,7 +50,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
 
     if (viewMode === 'list') {
         return (
-            <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group bg-white rounded-[8px] overflow-hidden flex flex-row transition-shadow hover:shadow-[0_4px_12px_rgb(0,0,0,0.02)] block">
+            <Link onClick={handleClick} href={`/properties/${property.id}`} className="group bg-white rounded-[8px] overflow-hidden flex flex-row transition-shadow hover:shadow-[0_4px_12px_rgb(0,0,0,0.02)] block">
                 {/* Image — left side */}
                 <div className="relative w-[40%] sm:w-[420px] min-h-[150px] sm:h-[230px] shrink-0 overflow-hidden bg-gray-100">
                     {hasValidImage ? (
@@ -131,7 +131,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
 
     // Grid view (default)
     return (
-        <Link onClick={handleClick} href={`/rentals/${property.id}`} className="group flex flex-col h-full rounded-[8px] overflow-hidden bg-[var(--bg-block)]">
+        <Link onClick={handleClick} href={`/properties/${property.id}`} className="group flex flex-col h-full rounded-[8px] overflow-hidden bg-[var(--bg-block)]">
             {/* Image — full bleed */}
             <div className="relative h-[220px] sm:h-[250px] lg:h-[274px] overflow-hidden bg-gray-100 shrink-0">
                 {hasValidImage ? (
@@ -160,7 +160,7 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-5 p-5 flex-1">
+            <div className="card-body flex flex-col gap-5 p-5 flex-1">
                 {/* Title & Location */}
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
@@ -173,19 +173,19 @@ export default function PropertyCard({ property, viewMode = 'grid', isPopular = 
                     </div>
 
                     {/* Beds / Baths / Area */}
-                    <div className="flex items-center justify-between w-full text-[14px] sm:text-[16px] font-light text-[color:var(--on-surface-variant)]">
+                    <div className="card-stats flex items-center justify-between gap-2 w-full whitespace-nowrap text-[14px] sm:text-[16px] font-light text-[color:var(--on-surface-variant)]">
                         <span className="flex items-center gap-1.5">
-                            <Bed size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                            <Bed size={24} weight="light" className="card-stat-icon shrink-0 text-[color:var(--on-surface-variant)]" />
                             {property.bedrooms} beds
                         </span>
                         <span className="text-[var(--outline-default)]">|</span>
                         <span className="flex items-center gap-1.5">
-                            <Bathtub size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                            <Bathtub size={24} weight="light" className="card-stat-icon shrink-0 text-[color:var(--on-surface-variant)]" />
                             {property.bathrooms} baths
                         </span>
                         <span className="text-[var(--outline-default)]">|</span>
                         <span className="flex items-center gap-1.5">
-                            <SquaresFour size={24} weight="light" className="text-[color:var(--on-surface-variant)]" />
+                            <SquaresFour size={24} weight="light" className="card-stat-icon shrink-0 text-[color:var(--on-surface-variant)]" />
                             {formatArea(property.sqft)}
                         </span>
                     </div>

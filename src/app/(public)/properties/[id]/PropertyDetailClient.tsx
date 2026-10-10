@@ -12,7 +12,7 @@ import {
 import { ImageIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Property } from '@/lib/types';
-import { formatArea, formatListingPrice, FURNISHING_LABELS, LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS, STATUS_LABELS } from '@/lib/properties';
+import { formatArea, formatListingPrice, FURNISHING_LABELS, LISTING_TYPE_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/properties';
 import { FavouriteButton } from '@/components/listings/SaveCompareButtons';
 import BookingModal from '@/components/listings/BookingModal';
 import CompareModal from '@/components/listings/CompareModal';
@@ -86,10 +86,6 @@ function LightboxModal({
         active?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }, [currentIndex]);
 
-    const statusLabel =
-        propertyStatus === 'AVAILABLE' ? 'Available' :
-            propertyStatus === 'PENDING' ? 'Pending' :
-                propertyStatus?.replace('_', ' ') || '';
 
     return (
         // Full-screen overlay — rgba(0,0,0,0.93) per Figma
@@ -114,7 +110,7 @@ function LightboxModal({
                             style={{ background: 'rgba(21,128,61,0.1)', backdropFilter: 'blur(12px)' }}
                         >
                             <span className="text-[14px] font-normal leading-5 text-[var(--text-attention)]">
-                                {statusLabel}
+                                {propertyStatus}
                             </span>
                         </div>
                     </div>
@@ -312,7 +308,6 @@ export default function PropertyDetailClient({
     const specifications: [string, string | number][] = [
         ['Listing', LISTING_TYPE_LABELS[property.listing_type] ?? '—'],
         ['Property type', PROPERTY_TYPE_LABELS[property.property_type] ?? '—'],
-        ['Status', STATUS_LABELS[property.status] ?? property.status],
         ['Furnishing', FURNISHING_LABELS[property.furnishing] ?? '—'],
         ['Area', property.sqft ? formatArea(property.sqft) : '—'],
         ['Bedrooms', property.bedrooms],
@@ -344,13 +339,13 @@ export default function PropertyDetailClient({
                     onSetIndex={setCurrentImage}
                     propertyTitle={property.title}
                     propertyCity={property.city}
-                    propertyStatus={property.status}
+                    propertyStatus={LISTING_TYPE_LABELS[property.listing_type]}
                 />
             )}
 
             <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} property={property} />
             <CompareModal open={compareOpen} onOpenChange={setCompareOpen} current={property} />
-            <ShareModal open={shareOpen} onOpenChange={setShareOpen} path={`/rentals/${property.id}`} title={property.title} />
+            <ShareModal open={shareOpen} onOpenChange={setShareOpen} path={`/properties/${property.id}`} title={property.title} />
 
             {/* ── Section: Breadcrumb + Main Content ──────────────────── */}
             <section className="bg-[var(--surface-variant)] min-h-screen pt-[var(--header-height)]">
@@ -363,7 +358,7 @@ export default function PropertyDetailClient({
                                 Home
                             </Link>
                             <CaretRight size={16} className="text-[color:var(--on-surface-default)] opacity-60" />
-                            <Link href="/rentals" className="text-[color:var(--on-surface-default)] hover:underline hover:opacity-80 transition-all">
+                            <Link href="/properties" className="text-[color:var(--on-surface-default)] hover:underline hover:opacity-80 transition-all">
                                 Properties
                             </Link>
                             <CaretRight size={16} className="text-[color:var(--on-surface-default)] opacity-60" />
@@ -385,7 +380,7 @@ export default function PropertyDetailClient({
                                     <div className="flex items-center gap-2 flex-wrap">
                                         {property.featured && <span className="pill-glass !bg-[var(--color-gray-600)]">Featured</span>}
                                         <span className="inline-flex items-center px-2 py-0.5 text-[14px] font-normal text-[var(--feedback-success)] bg-[rgba(21,128,61,0.1)] rounded-[4px] leading-5">
-                                            {STATUS_LABELS[property.status] ?? property.status.replace('_', ' ')} · {LISTING_TYPE_LABELS[property.listing_type]}
+                                            {LISTING_TYPE_LABELS[property.listing_type]}
                                         </span>
                                     </div>
                                     <h1 className="text-[length:var(--typeface-heading-h2)] leading-[1.1] text-[color:var(--on-surface-default)]">
@@ -727,7 +722,7 @@ export default function PropertyDetailClient({
                             {/* Right: View All + Arrows */}
                             <div className="flex items-center gap-6 shrink-0">
                                 <Link
-                                    href="/rentals"
+                                    href="/properties"
                                     className="flex items-center justify-center px-[22.5px] py-[15px] rounded-[var(--radius-md)] bg-[var(--on-surface-primary)] text-[color:var(--on-surface-inverse)] text-[length:var(--typeface-paragraph-text-s)] font-medium leading-normal min-w-[80px] hover:bg-[var(--foundation-blue-blue-7)] transition-colors"
                                 >
                                     View all

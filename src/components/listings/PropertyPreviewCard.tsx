@@ -22,7 +22,7 @@ export default function PropertyPreviewCard({ property, compact = false }: Prope
 
     if (compact) {
         return (
-            <Link href={`/rentals/${property.id}`} className="group block">
+            <Link href={`/properties/${property.id}`} className="group block">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 hover:border-accent-200 hover:shadow-md transition-all">
                     <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
                         {hasValidImage ? (
@@ -56,7 +56,7 @@ export default function PropertyPreviewCard({ property, compact = false }: Prope
     }
 
     return (
-        <Link href={`/rentals/${property.id}`} className="group block">
+        <Link href={`/properties/${property.id}`} className="group block">
             <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-accent-200 hover:shadow-lg transition-all">
                 <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                     {hasValidImage ? (

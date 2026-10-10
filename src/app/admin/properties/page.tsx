@@ -218,7 +218,7 @@ export default function AdminPropertiesPage() {
                                                             <Star className={`h-4 w-4 ${prop.featured ? 'fill-foreground text-foreground' : 'text-muted-foreground'}`} />
                                                         </Button>
                                                         <Button variant="ghost" size="icon" asChild>
-                                                            <Link href={`/rentals/${prop.id}`} target="_blank" aria-label={`View ${prop.title} on the public site`} title="View on site">
+                                                            <Link href={`/properties/${prop.id}`} target="_blank" aria-label={`View ${prop.title} on the public site`} title="View on site">
                                                                 <ExternalLink className="h-4 w-4" />
                                                             </Link>
                                                         </Button>

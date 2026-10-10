@@ -40,7 +40,7 @@ export default function LandingProperties({ initialProperties }: LandingProperti
                 </div>
                 <div className="flex gap-6 items-center shrink-0">
                     <Link
-                        href="/rentals"
+                        href="/properties"
                         className="bg-[var(--on-surface-primary)] flex items-center justify-center px-[22.5px] py-[15px] rounded-[6px] text-[length:var(--typeface-paragraph-text-s)] font-medium text-white leading-normal min-w-[80px] hover:bg-[var(--foundation-blue-blue-7)] transition-colors"
                     >
                         View all

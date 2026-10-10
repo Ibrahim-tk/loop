@@ -1,4 +1,4 @@
-// Route-level loading skeleton for /rentals/[id]
+// Route-level loading skeleton for /properties/[id]
 // Shows instantly while the server fetches the property — no more blank white screen
 export default function PropertyDetailLoading() {
     return (

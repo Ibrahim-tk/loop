@@ -757,3 +757,15 @@
   -webkit-mask-image: linear-gradient(to right, transparent, #000 64px, #000 calc(100% - 64px), transparent);
   mask-image: linear-gradient(to right, transparent, #000 64px, #000 calc(100% - 64px), transparent);
 }
+
+/* Endless strip: the track holds two identical copies, so shifting by half loops seamlessly */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 40s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation-duration: 120s; } }
+
+
+/* Property card: drop the bed/bath/area icons when the card gets too narrow to fit them on one line */
+.card-body { container-type: inline-size; }
+@container (max-width: 340px) {
+    .card-stats .card-stat-icon { display: none; }
+}

@@ -138,7 +138,7 @@ export default function ViewingBooking({ property }: { property: Pick<Property, 
                 <div>
                     <p className="font-medium">Viewings are closed</p>
                     <p className="text-[color:var(--text-secondary)] text-[length:var(--typeface-paragraph-text-s)] mt-1">
-                        This property has been {property.status === 'SOLD' ? 'sold' : property.status === 'RENTED' ? 'rented' : 'taken off the market'}.
+                        This property is no longer available.
                         Browse similar listings below.
                     </p>
                 </div>

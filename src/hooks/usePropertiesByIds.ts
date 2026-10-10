@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { PUBLIC_STATUSES } from '@/lib/properties';
 import type { Property } from '@/lib/types';
 import { useSavedProperties } from '@/stores/savedProperties';
 
@@ -33,6 +34,7 @@ export function usePropertiesByIds(ids: string[], enabled = true) {
             .from('properties')
             .select('*, property_images(*)')
             .in('id', ids)
+            .in('status', PUBLIC_STATUSES)
             .then(({ data, error: err }) => {
                 if (cancelled) return;
                 if (err) {

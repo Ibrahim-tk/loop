@@ -6,12 +6,10 @@ import {
     AMENITY_OPTIONS,
     FURNISHING_LABELS,
     PROPERTY_TYPE_LABELS,
-    PUBLIC_STATUSES,
-    STATUS_LABELS,
     type PropertyFilters,
 } from '@/lib/properties';
 import { SQFT_PER_KANAL, SQFT_PER_MARLA } from '@/lib/utils';
-import type { Furnishing, ListingType, Property, PropertyStatus, PropertyType } from '@/lib/types';
+import type { Furnishing, ListingType, Property, PropertyType } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface FilterSidebarProps {
@@ -283,18 +281,6 @@ export default function FilterSidebar({ filters, properties, setFilter, toggleAm
                 </div>
             </Section>
 
-            <Section title="Status">
-                <div className="flex flex-wrap gap-2">
-                    {PUBLIC_STATUSES.map((value) => {
-                        const on = filters.status === value;
-                        return (
-                            <button key={value} type="button" aria-pressed={on} onClick={() => setFilter('status', on ? '' : (value as PropertyStatus))} className={chip(on)}>
-                                {STATUS_LABELS[value]}
-                            </button>
-                        );
-                    })}
-                </div>
-            </Section>
 
             <Section title="Amenities">
                 <div className="flex flex-wrap gap-2">

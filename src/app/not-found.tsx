@@ -21,7 +21,7 @@ export default function NotFound() {
                         Go home
                     </Link>
                     <Link
-                        href="/rentals"
+                        href="/properties"
                         className="px-6 py-3 rounded-[6px] border border-[var(--outline-default)] text-sm font-medium text-[color:var(--on-surface-default)] hover:bg-[var(--surface-variant)] transition-colors"
                     >
                         Browse properties

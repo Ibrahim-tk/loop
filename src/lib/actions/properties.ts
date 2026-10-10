@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient, requireAdmin } from '@/lib/supabase/server';
+import { PUBLIC_STATUSES } from '@/lib/properties';
 import { revalidatePath } from 'next/cache';
 import { PropertyFormData } from '@/lib/types';
 import { sanitizePostgrestSearch } from '@/lib/utils';
@@ -75,7 +76,7 @@ export async function getPublicProperties(filters?: {
     let query = supabase
         .from('properties')
         .select('id, title, city, zip, rent_price, bedrooms, bathrooms, sqft, status, featured, property_images(*)')
-        .in('status', ['AVAILABLE', 'PENDING', 'SHOWCASE'])
+        .in('status', PUBLIC_STATUSES)
         .order('created_at', { ascending: false });
 
     if (filters?.search) {
@@ -122,9 +123,9 @@ export type SavePropertyResult =
     | { ok: false; error: string; fieldErrors?: PropertyFieldErrors };
 
 function revalidatePublic(id?: string) {
-    revalidatePath('/rentals');
+    revalidatePath('/properties');
     revalidatePath('/');
-    if (id) revalidatePath(`/rentals/${id}`);
+    if (id) revalidatePath(`/properties/${id}`);
 }
 
 /** Validates and saves a property. Pass an id to update, omit it to create. */
@@ -226,7 +227,7 @@ export async function uploadPropertyImage(propertyId: string, file: File) {
         });
 
     if (insertError) throw insertError;
-    revalidatePath(`/rentals/${propertyId}`);
+    revalidatePath(`/properties/${propertyId}`);
     return publicUrl;
 }
 
@@ -238,7 +239,7 @@ export async function deletePropertyImage(imageId: string, propertyId: string) {
         .eq('id', imageId);
 
     if (error) throw error;
-    revalidatePath(`/rentals/${propertyId}`);
+    revalidatePath(`/properties/${propertyId}`);
 }
 
 export async function incrementView(propertyId: string) {

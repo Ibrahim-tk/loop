@@ -39,6 +39,13 @@ const securityHeaders = [
 const nextConfig = {
     // Lets a production build run alongside the dev server (NEXT_DIST_DIR=.next-build)
     distDir: process.env.NEXT_DIST_DIR || '.next',
+    // Old listing URLs moved to /properties
+    async redirects() {
+        return [
+            { source: '/rentals', destination: '/properties', permanent: true },
+            { source: '/rentals/:id', destination: '/properties/:id', permanent: true },
+        ];
+    },
     async headers() {
         return [
             {

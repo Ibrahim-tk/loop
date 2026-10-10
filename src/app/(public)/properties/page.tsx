@@ -1,5 +1,5 @@
 import { createPublicClient } from '@/lib/supabase/server';
-import RentalsClient from './RentalsClient';
+import PropertiesClient from './PropertiesClient';
 import { Property } from '@/lib/types';
 import { PUBLIC_STATUSES } from '@/lib/properties';
 import { Suspense } from 'react';
@@ -13,19 +13,19 @@ export const metadata: Metadata = {
 // Always fresh, so admin edits show up on the next page load
 export const dynamic = 'force-dynamic';
 
-export default async function RentalsPage() {
+export default async function PropertiesPage() {
     const supabase = createPublicClient();
 
     // The catalogue is small (tens of listings), so load it once and filter in the browser
     const { data, error } = await supabase
         .from('properties')
         .select('*, property_images(*)')
-        .in('status', [...PUBLIC_STATUSES, 'SHOWCASE'])
+        .in('status', PUBLIC_STATUSES)
         .order('display_order', { referencedTable: 'property_images', ascending: true });
 
     return (
         <Suspense fallback={null}>
-            <RentalsClient properties={(data as Property[]) || []} loadError={Boolean(error)} />
+            <PropertiesClient properties={(data as Property[]) || []} loadError={Boolean(error)} />
         </Suspense>
     );
 }

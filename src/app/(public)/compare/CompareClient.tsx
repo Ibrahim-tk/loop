@@ -4,7 +4,9 @@ import Image from 'next/image';
 import Icon3D from '@/components/ui/Icon3D';
 import { usePrefs } from '@/lib/store';
 import Link from 'next/link';
-import { CaretRight, Check, Info, Minus, Scales, WarningCircle, X } from '@phosphor-icons/react';
+import { useState } from 'react';
+import CompareModal from '@/components/listings/CompareModal';
+import { CaretRight, Check, Info, Minus, Plus, X } from '@phosphor-icons/react';
 import { usePropertiesByIds } from '@/hooks/usePropertiesByIds';
 import { MAX_COMPARE, useSavedHydrated, useSavedProperties } from '@/stores/savedProperties';
 import {
@@ -13,7 +15,6 @@ import {
     FURNISHING_LABELS,
     LISTING_TYPE_LABELS,
     PROPERTY_TYPE_LABELS,
-    STATUS_LABELS,
 } from '@/lib/properties';
 import { formatPrice, SQFT_PER_MARLA } from '@/lib/utils';
 import type { Property } from '@/lib/types';
@@ -54,7 +55,6 @@ const ROWS: Row[] = [
     { label: 'Property type', render: (p) => PROPERTY_TYPE_LABELS[p.property_type] },
     { label: 'Location', render: (p) => `${p.city}${p.zip ? `, ${p.zip}` : ''}` },
     { label: 'Furnishing', render: (p) => FURNISHING_LABELS[p.furnishing] },
-    { label: 'Status', render: (p) => STATUS_LABELS[p.status] ?? p.status },
     { label: 'Year built', render: (p) => p.year_built ?? '—', score: (p) => p.year_built ?? 0, best: 'max' },
 ];
 
@@ -80,6 +80,9 @@ export default function CompareClient() {
     const clearCompare = useSavedProperties((s) => s.clearCompare);
     const { properties, loading, error, removedCount } = usePropertiesByIds(compare, hydrated);
 
+    const [addOpen, setAddOpen] = useState(false);
+    const canAdd = compare.length < MAX_COMPARE;
+
     const isLoading = !hydrated || loading;
     const amenities = Array.from(new Set(properties.flatMap((p) => p.amenities ?? []))).sort();
 
@@ -89,7 +92,7 @@ export default function CompareClient() {
                 <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8 flex items-center gap-2 text-[length:var(--typeface-paragraph-text)]">
                     <Link href="/" className="hover:underline">Home</Link>
                     <CaretRight size={16} className="opacity-60" />
-                    <Link href="/rentals" className="hover:underline">Properties</Link>
+                    <Link href="/properties" className="hover:underline">Properties</Link>
                     <CaretRight size={16} className="opacity-60" />
                     <span className="opacity-60">Compare</span>
                 </nav>
@@ -97,16 +100,21 @@ export default function CompareClient() {
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6">
                     <div>
                         <h1 className="text-[length:var(--typeface-heading-h1)]">Compare properties</h1>
-                        <p className="mt-2 text-[color:var(--text-secondary)]">
-                            Up to {MAX_COMPARE} side by side. <span className="inline-flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-full bg-[var(--color-green-500)]" /> marks the best value in a row.</span>
-                        </p>
                     </div>
-                    {!isLoading && properties.length > 0 && (
-                        <button type="button" onClick={clearCompare}
-                            className="self-start sm:self-auto text-[length:var(--typeface-paragraph-text-s)] font-medium underline text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]">
-                            Clear comparison
-                        </button>
-                    )}
+                    <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+                        {!isLoading && properties.length > 0 && (
+                            <button type="button" onClick={clearCompare}
+                                className="text-[length:var(--typeface-paragraph-text-s)] font-medium underline text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]">
+                                Clear comparison
+                            </button>
+                        )}
+                        {canAdd && (
+                            <button type="button" onClick={() => setAddOpen(true)}
+                                className="inline-flex items-center gap-2 h-11 px-4 rounded-[8px] ring-1 ring-[var(--outline-default)] bg-[var(--bg-block)] text-[length:var(--typeface-paragraph-text-s)] font-medium hover:bg-[var(--bg-gray-block)]">
+                                <Plus size={16} weight="bold" /> Add property
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {removedCount > 0 && (
@@ -124,18 +132,18 @@ export default function CompareClient() {
                         <p className="text-[length:var(--typeface-heading-subheading)]">We couldn&apos;t load the comparison.</p>
                         <button type="button" onClick={() => window.location.reload()} className="btn-primary mt-2">Try again</button>
                     </div>
-                ) : properties.length < 2 ? (
+                ) : properties.length === 0 ? (
                     <div className="blur-rise flex flex-col items-center text-center gap-3 py-16 px-6 bg-[var(--bg-block)] rounded-[var(--radius-md)]">
                         <Icon3D name="scales" size={104} className="mb-2" />
                         <h2 className="text-[length:var(--typeface-heading-h3)]">
-                            {properties.length === 0 ? 'Nothing to compare yet' : 'Add one more property'}
+                            Nothing to compare yet
                         </h2>
                         <p className="max-w-[440px] text-[color:var(--text-secondary)]">
-                            {properties.length === 0
-                                ? 'Use the scales icon on any property to add it here. Pick 2 to 4.'
-                                : `“${properties[0].title}” is ready. Add at least one more to see them side by side.`}
+                            Add properties to see them side by side. Pick 2 to {MAX_COMPARE}.
                         </p>
-                        <Link href="/rentals" className="btn-primary mt-2">Browse properties</Link>
+                        <button type="button" onClick={() => setAddOpen(true)} className="btn-primary mt-2 inline-flex items-center gap-2">
+                            <Plus size={16} weight="bold" /> Add property
+                        </button>
                     </div>
                 ) : (
                     <div className="rounded-[var(--radius-md)] bg-[var(--bg-block)] overflow-hidden border border-[var(--outline-default)]">
@@ -146,7 +154,7 @@ export default function CompareClient() {
                                     <tr>
                                         <th scope="col" className={`${labelCell} align-bottom`}><span className="sr-only">Attribute</span></th>
                                         {properties.map((p) => (
-                                            <th key={p.id} scope="col" className={`${cellBase} min-w-[220px] w-[260px] font-normal`}>
+                                            <th key={p.id} scope="col" className={`${cellBase} min-w-[220px] font-normal`}>
                                                 <div className="relative aspect-[4/3] rounded-[var(--radius-sm)] overflow-hidden bg-[var(--surface-container-highest)]">
                                                     {p.property_images?.[0] && (
                                                         <Image src={p.property_images[0].storage_url} alt="" fill sizes="260px" className="object-cover" />
@@ -156,7 +164,7 @@ export default function CompareClient() {
                                                         <X size={14} weight="bold" />
                                                     </button>
                                                 </div>
-                                                <Link href={`/rentals/${p.id}`} className="block mt-3 text-[length:var(--typeface-heading-subheading)] leading-6 hover:underline">
+                                                <Link href={`/properties/${p.id}`} className="block mt-3 text-[length:var(--typeface-heading-subheading)] leading-6 hover:underline">
                                                     {p.title}
                                                 </Link>
                                             </th>
@@ -172,7 +180,6 @@ export default function CompareClient() {
                                                 {properties.map((p, i) => (
                                                     <td key={p.id} className={`${cellBase} ${best.has(i) ? 'bg-[var(--color-green-50)]' : ''}`}>
                                                         <span className="inline-flex items-center gap-2">
-                                                            {best.has(i) && <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-green-500)] shrink-0" aria-label="Best value" />}
                                                             {row.render(p)}
                                                         </span>
                                                     </td>
@@ -210,6 +217,7 @@ export default function CompareClient() {
                     </div>
                 )}
             </div>
+            <CompareModal open={addOpen} onOpenChange={setAddOpen} exclude={compare} />
         </section>
     );
 }
